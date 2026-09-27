@@ -1,0 +1,39 @@
+/* Сброс, корневые элементы и общие для всех экранов анимации. */
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  height:100%;
+  background:var(--c-page);
+  overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+
+a{color:var(--c-blue)}
+a:hover{color:var(--c-blue-deep)}
+
+button{font:inherit;color:inherit}
+
+/* Обёртка-слот: собственного бокса не создаёт, поэтому вложенные экраны
+   позиционируются относительно .stage, как если бы лежали в ней напрямую. */
+.slot{display:contents}
+
+/* ---- Анимации ---- */
+
+/* Бегущие вниз столбцы из нулей и единиц. Текст в столбце продублирован,
+   поэтому сдвиг на половину высоты даёт бесшовный цикл. */
+@keyframes pp-code{from{transform:translateY(-50%)}to{transform:translateY(0)}}
+
+/* Импульс, бегущий по схемной дорожке. */
+@keyframes pp-trace{from{stroke-dashoffset:0}to{stroke-dashoffset:-600}}
+
+/* Появление экрана. */
+@keyframes pp-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* Появление логотипа и диалога. */
+@keyframes pp-pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}

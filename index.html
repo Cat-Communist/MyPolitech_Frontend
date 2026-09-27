@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Путешествие по Политеху</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400&amp;display=swap">
+
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/menu.css">
+</head>
+<body>
+
+<div class="app">
+  <div class="stage" id="stage">
+    <!-- Фон (сетка, дорожки, столбцы кода) строится в js/screens.js -->
+    <div class="bg" id="bg" aria-hidden="true"></div>
+
+    <!-- Сюда монтируется текущий экран -->
+    <div class="slot" id="screen-slot"></div>
+    <!-- Кнопки «Об игре» и «Звук» -->
+    <div class="slot" id="corner-slot"></div>
+    <!-- Диалог «Об игре» -->
+    <div class="slot" id="modal-slot"></div>
+  </div>
+</div>
+
+<!-- ======================= ЭКРАН ЗАГРУЗКИ ======================= -->
+<template id="tpl-loading">
+  <div class="loading">
+    <img class="loading__logo" data-img="logo" data-alt="logoAlt" alt="">
+    <div class="loading__bar">
+      <div class="loading__track">
+        <div class="loading__fill" id="progress-fill"></div>
+      </div>
+      <div class="loading__row">
+        <span data-text="loading"></span>
+        <span class="loading__pct" id="progress-label"></span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- ============================ МЕНЮ ============================ -->
+<template id="tpl-menu">
+  <div class="menu">
+    <img class="menu__mark" data-img="mark" data-alt="markAlt" alt="">
+
+    <div class="menu__head">
+      <h1 class="menu__title" data-text="title"></h1>
+      <p class="menu__tagline" data-text="tagline"></p>
+    </div>
+
+    <div class="menu__modes">
+      <button class="mode" type="button" data-mode="alumni">
+        <svg class="mode__icon" width="68" height="68" viewBox="0 0 68 68" aria-hidden="true">
+          <rect x="6" y="16" width="46" height="38" rx="3"></rect>
+          <path d="M14 10 H60 V46"></path>
+          <circle cx="38" cy="29" r="4"></circle>
+          <path d="M6 46 L20 32 L34 46"></path>
+          <path d="M28 40 L34 34 L52 50"></path>
+        </svg>
+        <span class="mode__text">
+          <span class="mode__title" data-text="alumniTitle"></span>
+          <span class="mode__desc" data-text="alumniDesc"></span>
+        </span>
+        <svg class="mode__arrow" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+          <path d="M5 14 H22 M15 7 L22 14 L15 21"></path>
+        </svg>
+      </button>
+
+      <button class="mode" type="button" data-mode="applicants">
+        <svg class="mode__icon" width="68" height="68" viewBox="0 0 68 68" aria-hidden="true">
+          <circle cx="34" cy="34" r="27"></circle>
+          <polygon points="44,24 38,38 24,44 30,30"></polygon>
+          <circle cx="34" cy="34" r="2"></circle>
+          <path d="M34 7 V12 M34 56 V61 M7 34 H12 M56 34 H61"></path>
+        </svg>
+        <span class="mode__text">
+          <span class="mode__title" data-text="applicantsTitle"></span>
+          <span class="mode__desc" data-text="applicantsDesc"></span>
+        </span>
+        <svg class="mode__arrow" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+          <path d="M5 14 H22 M15 7 L22 14 L15 21"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <img class="footer__logo" data-img="logo" data-alt="logoAlt" alt="">
+    <span class="footer__text" data-text="university"></span>
+  </div>
+</template>
+
+<!-- ========================== ЗАГЛУШКА ========================== -->
+<template id="tpl-stub">
+  <div class="stub">
+    <div class="stub__card">
+      <span class="stub__badge" id="stub-badge"></span>
+      <h2 class="stub__title" data-text="soonTitle"></h2>
+      <p class="stub__text" id="stub-text"></p>
+      <button class="btn-back" type="button" id="btn-back">
+        <svg class="btn-back__icon" width="26" height="26" viewBox="0 0 28 28" aria-hidden="true">
+          <path d="M23 14 H6 M13 7 L6 14 L13 21"></path>
+        </svg>
+        <span data-text="back"></span>
+      </button>
+    </div>
+  </div>
+</template>
+
+<!-- ====================== КНОПКИ В УГЛУ ====================== -->
+<template id="tpl-corner">
+  <div class="corner" id="corner" data-sound="off">
+    <button class="corner__btn" type="button" id="btn-about">
+      <svg class="corner__icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 11 V17"></path>
+        <circle class="corner__icon-dot" cx="12" cy="7.5" r=".6"></circle>
+      </svg>
+      <span data-text="about"></span>
+    </button>
+
+    <button class="corner__btn" type="button" id="btn-sound" aria-pressed="false">
+      <svg class="corner__icon corner__icon--sound" width="24" height="24" viewBox="0 0 26 26" aria-hidden="true">
+        <path d="M3 10 H8 L14 5 V21 L8 16 H3 Z"></path>
+        <path class="snd-on" d="M17.5 9.5 Q20 13 17.5 16.5"></path>
+        <path class="snd-on" d="M20 6.5 Q25 13 20 19.5"></path>
+        <path class="snd-off" d="M18 10 L24 16 M24 10 L18 16"></path>
+      </svg>
+      <span id="sound-label"></span>
+    </button>
+  </div>
+</template>
+
+<!-- ======================= ДИАЛОГ «ОБ ИГРЕ» ======================= -->
+<template id="tpl-about">
+  <div class="about" id="about-overlay" role="dialog" aria-modal="true" aria-labelledby="about-title">
+    <div class="about__dialog" id="about-dialog">
+      <h2 class="about__title" id="about-title" data-text="aboutTitle"></h2>
+      <p class="about__text" data-text="aboutText1"></p>
+      <p class="about__text about__text--dim" data-text="aboutText2"></p>
+      <button class="about__ok" type="button" id="btn-about-ok" data-text="aboutOk"></button>
+    </div>
+  </div>
+</template>
+
+<script src="js/config.js"></script>
+<script src="js/screens.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

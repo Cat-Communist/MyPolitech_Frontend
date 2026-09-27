@@ -1,0 +1,402 @@
+/* Оформление сцены, фона и всех трёх экранов. */
+
+.app{
+  position:fixed;
+  inset:0;
+  background:var(--c-page);
+  overflow:hidden;
+  font-family:var(--font-ui);
+  color:var(--c-ink);
+  user-select:none;
+}
+
+/* Сцена фиксированного размера (1600x900 или 900x1600), которая целиком
+   масштабируется под окно. Благодаря этому вёрстка внутри не «плывёт». */
+.stage{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:var(--stage-w);
+  height:var(--stage-h);
+  transform:translate(-50%,-50%) scale(var(--stage-scale));
+  transform-origin:center;
+  overflow:hidden;
+  border-radius:14px;
+  background:var(--c-bg);
+  box-shadow:0 24px 60px rgba(14,26,43,.14), 0 0 0 1px var(--c-line);
+}
+
+/* ============================ ФОН ============================ */
+
+.bg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+
+/* Два слоя, которые смещаются за курсором с разной амплитудой. */
+.bg__layer{
+  position:absolute;
+  inset:-40px;
+  transition:transform .9s cubic-bezier(.2,.7,.3,1);
+  pointer-events:none;
+}
+
+.bg__grid{
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(var(--c-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--c-grid) 1px, transparent 1px);
+}
+.bg__grid--sm{background-size:40px 40px}
+.bg__grid--lg{background-size:200px 200px}
+
+/* Столбцы кода приглушены к центру, чтобы не мешать тексту. */
+.bg__code{
+  position:absolute;
+  inset:0;
+  -webkit-mask-image:radial-gradient(ellipse 60% 55% at 50% 48%, transparent 30%, #000 85%);
+  mask-image:radial-gradient(ellipse 60% 55% at 50% 48%, transparent 30%, #000 85%);
+}
+.bg__col{
+  position:absolute;
+  top:0;
+  font-family:var(--font-mono);
+  font-size:16px;
+  line-height:26px;
+  white-space:pre;
+  color:var(--c-code);
+}
+
+.bg__circuit{position:absolute}
+.bg__circuit--tl{left:0;top:0}
+.bg__circuit--br{right:0;bottom:0}
+
+.bg__trace{fill:none;stroke:var(--c-circuit);stroke-width:1.5}
+.bg__trace-pulse{
+  fill:none;
+  stroke:var(--c-blue);
+  stroke-opacity:.35;
+  stroke-width:1.5;
+  stroke-dasharray:40 560;
+}
+.bg__node{fill:var(--c-bg);stroke:var(--c-circuit);stroke-width:1.5}
+
+/* Высветление центра, чтобы фон не спорил с содержимым. */
+.bg__vignette{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse 55% 50% at 50% 48%, var(--c-bg) 35%, transparent 80%);
+  opacity:.85;
+}
+
+/* ========================= ЗАГРУЗКА ========================= */
+
+.loading{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:48px;
+  background:var(--c-bg);
+}
+.loading__logo{
+  width:200px;
+  height:200px;
+  display:block;
+  border-radius:50%;
+  animation:pp-pop .5s ease-out both;
+}
+.loading__bar{display:flex;flex-direction:column;gap:16px;width:520px;max-width:80%}
+.loading__track{width:100%;height:6px;border-radius:3px;background:var(--c-line);overflow:hidden}
+.loading__fill{
+  height:100%;
+  width:var(--progress);
+  background:var(--c-blue);
+  box-shadow:0 0 12px var(--c-blue);
+}
+.loading__row{
+  display:flex;
+  justify-content:space-between;
+  width:100%;
+  font-size:18px;
+  font-weight:600;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--c-ink-dim);
+}
+.loading__pct{font-family:var(--font-mono);letter-spacing:0;color:var(--c-blue)}
+
+/* =========================== МЕНЮ =========================== */
+
+.menu{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:var(--menu-gap);
+  padding:60px;
+  animation:pp-in .45s ease-out both;
+}
+.menu__mark{height:var(--mark-h);width:auto;display:block}
+.menu__head{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
+.menu__title{
+  margin:0;
+  padding-bottom:6px;
+  font-weight:800;
+  font-size:var(--title-size);
+  line-height:1.05;
+  letter-spacing:-.015em;
+  text-wrap:balance;
+  background:var(--g-title);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.menu__tagline{margin:0;font-size:24px;font-weight:500;color:var(--c-ink-dim)}
+.menu__modes{display:flex;flex-direction:var(--modes-dir);gap:36px;margin-top:14px}
+
+.mode{
+  width:var(--mode-w);
+  height:160px;
+  display:flex;
+  align-items:center;
+  gap:30px;
+  padding:0 36px 0 40px;
+  border:1.5px solid var(--c-line);
+  border-radius:16px;
+  cursor:pointer;
+  text-align:left;
+  background:var(--c-surface);
+  box-shadow:0 2px 0 var(--c-line), 0 10px 24px rgba(14,26,43,.06);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.mode:hover{
+  transform:translateY(-4px);
+  border-color:var(--c-blue);
+  box-shadow:0 0 0 5px var(--c-glow), 0 18px 36px rgba(10,102,255,.18);
+}
+.mode:active{
+  transform:translateY(1px);
+  border-color:var(--c-blue);
+  box-shadow:0 0 0 3px var(--c-glow), 0 4px 10px rgba(10,102,255,.14);
+}
+.mode__icon{
+  flex:none;
+  fill:none;
+  stroke:var(--c-blue);
+  stroke-width:2.5;
+  stroke-linejoin:round;
+  stroke-linecap:round;
+}
+.mode__text{display:flex;flex-direction:column;gap:10px;min-width:0;flex:1}
+.mode__title{font-weight:700;font-size:34px;line-height:1.1;white-space:nowrap}
+.mode__desc{font-size:20px;font-weight:500;color:var(--c-ink-dim);white-space:nowrap}
+.mode__arrow{
+  flex:none;
+  fill:none;
+  stroke:var(--c-blue);
+  stroke-width:2.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.footer{
+  position:absolute;
+  left:36px;
+  bottom:30px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  animation:pp-in .45s ease-out both;
+}
+.footer__logo{width:58px;height:58px;border-radius:50%;display:block}
+.footer__text{
+  font-size:15px;
+  font-weight:600;
+  line-height:1.35;
+  color:var(--c-ink-dim);
+  max-width:var(--foot-w);
+}
+
+/* ========================= ЗАГЛУШКА ========================= */
+
+.stub{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:60px;
+  animation:pp-in .4s ease-out both;
+}
+.stub__card{
+  width:860px;
+  max-width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:28px;
+  text-align:center;
+  padding:60px 56px 56px;
+  border-radius:18px;
+  background:var(--c-surface);
+  border:1.5px solid var(--c-line);
+  box-shadow:0 20px 50px rgba(14,26,43,.08);
+}
+.stub__badge{
+  padding:9px 18px;
+  border-radius:6px;
+  background:var(--c-blue);
+  font-weight:700;
+  font-size:18px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:#fff;
+}
+.stub__title{
+  margin:0;
+  padding-bottom:4px;
+  font-weight:800;
+  font-size:60px;
+  line-height:1.1;
+  text-wrap:balance;
+  background:var(--g-title);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.stub__text{
+  margin:0;
+  font-size:26px;
+  line-height:1.5;
+  font-weight:500;
+  color:var(--c-ink-dim);
+  text-wrap:pretty;
+  max-width:660px;
+}
+
+.btn-back{
+  margin-top:12px;
+  height:80px;
+  padding:0 40px 0 32px;
+  border:1.5px solid var(--c-blue);
+  border-radius:12px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  font-weight:700;
+  font-size:26px;
+  color:#fff;
+  background:var(--c-blue);
+  box-shadow:0 8px 20px rgba(10,102,255,.25);
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.btn-back:hover{
+  transform:translateY(-3px);
+  background:var(--c-blue-deep);
+  box-shadow:0 0 0 5px var(--c-glow), 0 14px 30px rgba(10,102,255,.3);
+}
+.btn-back:active{transform:translateY(1px);box-shadow:0 0 0 3px var(--c-glow)}
+.btn-back__icon{
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.6;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* ==================== КНОПКИ В УГЛУ ==================== */
+
+.corner{position:absolute;top:30px;right:32px;display:flex;gap:12px;z-index:5}
+.corner__btn{
+  height:56px;
+  padding:0 22px 0 16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border:1.5px solid var(--c-line);
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:18px;
+  color:var(--c-ink);
+  background:var(--c-surface);
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.corner__btn:hover{
+  transform:translateY(-2px);
+  border-color:var(--c-blue);
+  box-shadow:0 0 0 4px var(--c-glow);
+}
+.corner__btn:active{transform:translateY(1px)}
+
+.corner__icon{fill:none;stroke:var(--c-blue);stroke-width:2;stroke-linecap:round}
+.corner__icon--sound{stroke-linejoin:round}
+/* Точка над «i» — единственная залитая деталь иконки. */
+.corner__icon-dot{fill:var(--c-blue)}
+
+/* Иконка динамика: дуги при включённом звуке, крестик при выключенном. */
+.snd-on,.snd-off{display:none}
+.corner[data-sound="on"] .snd-on{display:inline}
+.corner[data-sound="off"] .snd-off{display:inline}
+
+/* ===================== ДИАЛОГ «ОБ ИГРЕ» ===================== */
+
+.about{
+  position:absolute;
+  inset:0;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:60px;
+  background:rgba(14,26,43,.35);
+  backdrop-filter:blur(3px);
+  animation:pp-in .2s ease-out both;
+}
+.about__dialog{
+  width:800px;
+  max-width:100%;
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+  padding:48px 52px;
+  border-radius:18px;
+  background:var(--c-surface);
+  border:1.5px solid var(--c-line);
+  box-shadow:0 30px 70px rgba(14,26,43,.25);
+  animation:pp-pop .25s ease-out both;
+}
+.about__title{margin:0;font-weight:800;font-size:42px;color:var(--c-blue-deep)}
+.about__text{
+  margin:0;
+  font-size:23px;
+  line-height:1.55;
+  font-weight:500;
+  color:var(--c-ink);
+  text-wrap:pretty;
+}
+.about__text--dim{color:var(--c-ink-dim)}
+.about__ok{
+  align-self:flex-start;
+  margin-top:8px;
+  height:68px;
+  padding:0 40px;
+  border:1.5px solid var(--c-blue);
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:700;
+  font-size:22px;
+  color:#fff;
+  background:var(--c-blue);
+  transition:transform .16s ease, box-shadow .16s ease, background .16s ease;
+}
+.about__ok:hover{
+  transform:translateY(-2px);
+  background:var(--c-blue-deep);
+  box-shadow:0 0 0 5px var(--c-glow);
+}
+.about__ok:active{transform:translateY(1px)}
