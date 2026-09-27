@@ -13,26 +13,20 @@
 <body>
 
 <div class="app">
-  <div class="stage" id="stage">
-    <!-- Фон (сетка, дорожки, столбцы кода) строится в js/screens.js -->
+  <div class="stage">
     <div class="bg" id="bg" aria-hidden="true"></div>
-
-    <!-- Сюда монтируется текущий экран -->
     <div class="slot" id="screen-slot"></div>
-    <!-- Кнопки «Об игре» и «Звук» -->
     <div class="slot" id="corner-slot"></div>
-    <!-- Диалог «Об игре» -->
     <div class="slot" id="modal-slot"></div>
   </div>
 </div>
 
-<!-- ======================= ЭКРАН ЗАГРУЗКИ ======================= -->
 <template id="tpl-loading">
   <div class="loading">
     <img class="loading__logo" data-img="logo" data-alt="logoAlt" alt="">
     <div class="loading__bar">
       <div class="loading__track">
-        <div class="loading__fill" id="progress-fill"></div>
+        <div class="loading__fill"></div>
       </div>
       <div class="loading__row">
         <span data-text="loading"></span>
@@ -42,7 +36,6 @@
   </div>
 </template>
 
-<!-- ============================ МЕНЮ ============================ -->
 <template id="tpl-menu">
   <div class="menu">
     <img class="menu__mark" data-img="mark" data-alt="markAlt" alt="">
@@ -94,7 +87,6 @@
   </div>
 </template>
 
-<!-- ========================== ЗАГЛУШКА ========================== -->
 <template id="tpl-stub">
   <div class="stub">
     <div class="stub__card">
@@ -111,7 +103,6 @@
   </div>
 </template>
 
-<!-- ====================== КНОПКИ В УГЛУ ====================== -->
 <template id="tpl-corner">
   <div class="corner" id="corner" data-sound="off">
     <button class="corner__btn" type="button" id="btn-about">
@@ -135,7 +126,6 @@
   </div>
 </template>
 
-<!-- ======================= ДИАЛОГ «ОБ ИГРЕ» ======================= -->
 <template id="tpl-about">
   <div class="about" id="about-overlay" role="dialog" aria-modal="true" aria-labelledby="about-title">
     <div class="about__dialog" id="about-dialog">

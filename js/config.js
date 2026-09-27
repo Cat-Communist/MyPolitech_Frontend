@@ -1,11 +1,8 @@
-/* Единственное место, где лежат тексты, пути к картинкам и тайминги.
-   Цвета и шрифты — в css/variables.css. */
+/* Тексты и пути к картинкам. Цвета и шрифты — в css/variables.css. */
 
 window.CONFIG = {
-  /* Сколько миллисекунд идёт полоса загрузки. */
   loaderMs: 1500,
 
-  /* Пути относительные — от index.html. */
   images: {
     mark: 'assets/img/ipolytech.svg',
     logo: 'assets/img/logo-irnitu.png',
@@ -37,7 +34,6 @@ window.CONFIG = {
 
     university: 'Иркутский национальный исследовательский технический университет',
 
-    /* Подписи к картинкам для скринридеров. */
     markAlt: 'ipolytech',
     logoAlt: 'Логотип ИРНИТУ',
   },

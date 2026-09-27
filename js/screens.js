@@ -1,35 +1,25 @@
-/* Сборка фона, метрики сцены и переключение экранов.
-   Экраны монтируются из <template> в index.html и при уходе удаляются из DOM —
-   поэтому анимация появления (pp-in) проигрывается заново при каждом входе. */
-
 window.Screens = (function () {
   'use strict';
 
   var SVG_NS = 'http://www.w3.org/2000/svg';
   var current = null;
-  var layer1 = null;   /* сетка и столбцы кода — ближний слой параллакса */
-  var layer2 = null;   /* схемные дорожки — дальний слой */
-
-  /* ---------- подстановка текстов и картинок из config.js ---------- */
+  var layer1 = null;
+  var layer2 = null;
 
   function fill(root) {
     var T = window.CONFIG.texts;
     var IMG = window.CONFIG.images;
 
     root.querySelectorAll('[data-text]').forEach(function (el) {
-      el.textContent = T[el.dataset.text] || '';
+      el.textContent = T[el.dataset.text];
     });
 
     root.querySelectorAll('[data-img]').forEach(function (el) {
       el.src = IMG[el.dataset.img];
-      if (el.dataset.alt) el.alt = T[el.dataset.alt] || '';
+      el.alt = T[el.dataset.alt];
     });
   }
 
-  /* ---------------------- метрики сцены ---------------------- */
-
-  /* Сцена имеет фиксированный размер и целиком масштабируется под окно.
-     Ниже те же числа, что были в исходной версии. */
   function applyLayout() {
     var vw = window.innerWidth;
     var vh = window.innerHeight;
@@ -37,7 +27,7 @@ window.Screens = (function () {
 
     var W = portrait ? 900 : 1600;
     var H = portrait ? 1600 : 900;
-    /* На совсем маленьких окнах поля не оставляем, иначе ужимаем на 4%. */
+    /* На совсем маленьких окнах поля вокруг сцены не оставляем. */
     var scale = Math.min(vw / W, vh / H) * (vw < 700 || vh < 500 ? 1 : 0.96);
 
     var s = document.documentElement.style;
@@ -52,14 +42,9 @@ window.Screens = (function () {
     s.setProperty('--foot-w', portrait ? '600px' : '340px');
   }
 
-  /* --------------------------- фон ---------------------------
-     Фон детерминированный: тот же линейный конгруэнтный генератор
-     с зерном 11, что и в исходной версии, и тот же порядок вызовов,
-     поэтому расположение столбцов, их содержимое и тайминги совпадают. */
-
+  /* Зерно 11 и порядок вызовов rnd взяты из исходной версии — фон всегда получается одинаковым. */
   function buildBackground() {
     var bg = document.getElementById('bg');
-    if (!bg || bg.childElementCount) return;
 
     var seed = 11;
     var rnd = function () {
@@ -67,7 +52,6 @@ window.Screens = (function () {
       return seed / 233280;
     };
 
-    /* 40 строк, в каждой от 1 до 3 символов «0»/«1». */
     var colText = function () {
       return Array.from({ length: 40 }, function () {
         return Array.from({ length: 1 + Math.floor(rnd() * 3) }, function () {
@@ -76,7 +60,6 @@ window.Screens = (function () {
       }).join('\n');
     };
 
-    /* --- столбцы кода --- */
     var code = document.createElement('div');
     code.className = 'bg__code';
 
@@ -89,12 +72,10 @@ window.Screens = (function () {
       col.className = 'bg__col';
       col.style.left = x + '%';
       col.style.animation = 'pp-code ' + dur + 's linear ' + delay + 's infinite';
-      /* Текст продублирован — вместе с pp-code даёт бесшовную прокрутку. */
       col.textContent = txt + '\n' + txt;
       code.appendChild(col);
     });
 
-    /* --- схемные дорожки --- */
     function trace(svg, d, k) {
       var base = document.createElementNS(SVG_NS, 'path');
       base.setAttribute('d', d);
@@ -143,7 +124,6 @@ window.Screens = (function () {
       { d: 'M440 380 V330 L400 290', k: 5, x: 400, y: 290 },
     ]);
 
-    /* --- сборка слоёв --- */
     layer1 = document.createElement('div');
     layer1.className = 'bg__layer';
     var gridSm = document.createElement('div');
@@ -162,34 +142,29 @@ window.Screens = (function () {
     bg.append(layer1, layer2, vignette);
   }
 
-  /* Смещение слоёв за курсором. nx и ny — от -0.5 до 0.5. */
   function parallax(nx, ny) {
-    if (layer1) layer1.style.transform = 'translate(' + nx * -14 + 'px, ' + ny * -10 + 'px)';
-    if (layer2) layer2.style.transform = 'translate(' + nx * -30 + 'px, ' + ny * -20 + 'px)';
+    layer1.style.transform = 'translate(' + nx * -14 + 'px, ' + ny * -10 + 'px)';
+    layer2.style.transform = 'translate(' + nx * -30 + 'px, ' + ny * -20 + 'px)';
   }
-
-  /* ---------------------- экраны ---------------------- */
 
   function mount(slotId, tplId) {
     var slot = document.getElementById(slotId);
     slot.replaceChildren();
-    if (!tplId) return null;
+    if (!tplId) return;
     var frag = document.getElementById(tplId).content.cloneNode(true);
     fill(frag);
     slot.appendChild(frag);
-    return slot;
   }
 
+  /* Экран каждый раз монтируется заново, поэтому анимация появления проигрывается при каждом входе. */
   function show(name, mode) {
     current = name;
     mount('screen-slot', 'tpl-' + name);
 
     if (name === 'stub') {
       var T = window.CONFIG.texts;
-      /* Неизвестный режим — показываем выпускников, как в исходнике. */
-      var key = (mode === 'applicants') ? 'applicants' : 'alumni';
-      document.getElementById('stub-badge').textContent = T[key + 'Title'];
-      document.getElementById('stub-text').textContent = 'Здесь будет ' + T[key + 'Soon'];
+      document.getElementById('stub-badge').textContent = T[mode + 'Title'];
+      document.getElementById('stub-text').textContent = 'Здесь будет ' + T[mode + 'Soon'];
     }
 
     /* Кнопки в углу появляются после загрузки и дальше висят постоянно. */
@@ -201,13 +176,12 @@ window.Screens = (function () {
   function setProgress(value) {
     var pct = Math.round(value * 100);
     document.documentElement.style.setProperty('--progress', pct + '%');
-    var label = document.getElementById('progress-label');
-    if (label) label.textContent = String(pct).padStart(3, '0') + '%';
+    document.getElementById('progress-label').textContent = String(pct).padStart(3, '0') + '%';
   }
 
   function setSound(on) {
     var corner = document.getElementById('corner');
-    if (!corner) return;
+    if (!corner) return;   /* на экране загрузки кнопок ещё нет */
     corner.dataset.sound = on ? 'on' : 'off';
     document.getElementById('btn-sound').setAttribute('aria-pressed', String(on));
     document.getElementById('sound-label').textContent =
