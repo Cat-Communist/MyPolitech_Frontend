@@ -1,0 +1,7 @@
+# Служебные файлы Windows
+Thumbs.db
+desktop.ini
+
+# Настройки редакторов
+.vscode/
+.idea/
