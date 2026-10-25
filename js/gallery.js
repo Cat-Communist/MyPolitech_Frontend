@@ -23,15 +23,6 @@ window.Gallery = (function () {
 
   function pad(n) { return String(n).padStart(2, '0'); }
 
-  function plural(n, forms) {
-    var a = n % 100;
-    var b = n % 10;
-    if (a > 10 && a < 20) return forms[2];
-    if (b === 1) return forms[0];
-    if (b > 1 && b < 5) return forms[1];
-    return forms[2];
-  }
-
   /* Раскладка по страницам: титульная с первым фото, дальше по PER_PAGE фото на страницу. */
   function build() {
     years = window.GALLERY_DATA.slice().sort(function (a, b) { return a.year - b.year; })
@@ -97,8 +88,8 @@ window.Gallery = (function () {
       var count = y.photos.length;
       slot('num').textContent = pad(sp.y + 1) + ' / ' + pad(years.length);
       slot('year').textContent = y.year;
-      slot('meta').textContent = sp.n + ' ' + plural(sp.n, T.spreadForms) + ' · ' +
-        count + ' ' + plural(count, T.photoForms);
+      slot('meta').textContent = sp.n + ' ' + Screens.plural(sp.n, T.spreadForms) + ' · ' +
+        count + ' ' + Screens.plural(count, T.photoForms);
       fillPhoto(slot('photo0'), sp.y, 0);
       slot('caption').textContent = y.photos[0] ? y.photos[0].caption : '';
     } else {

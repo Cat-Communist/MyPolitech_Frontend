@@ -50,6 +50,15 @@
         step: function () { blip(660, 0.05); },
       });
     },
+    history: function () {
+      show('history');
+      window.HistoryBoard.init(document.getElementById('history'), {
+        pick: function () { blip(700, 0.05); },
+        open: function () { blip(880, 0.08); },
+        close: function () { blip(440); },
+        step: function () { blip(660, 0.05); },
+      });
+    },
   };
 
   function openMode(mode) {
@@ -97,7 +106,7 @@
   });
 
   /* mouseover, в отличие от mouseenter, всплывает; отсеиваем перемещения внутри кнопки. */
-  var HOVER_SELECTOR = '.mode, #btn-back, #btn-about, #btn-about-ok, .chip, .round, .viewer__all';
+  var HOVER_SELECTOR = '.mode, #btn-back, #btn-about, #btn-about-ok, .chip, .round, .viewer__all, .btn-primary, .dir-page__btn';
   document.addEventListener('mouseover', function (e) {
     var el = e.target.closest(HOVER_SELECTOR);
     if (!el) return;
@@ -118,6 +127,7 @@
   window.addEventListener('keydown', function (e) {
     var screen = S.currentScreen();
     if (screen === 'gallery' && window.Gallery.key(e)) return;
+    if (screen === 'history' && window.HistoryBoard.key(e)) return;
 
     if (e.key !== 'Escape') return;
     if (S.isAboutOpen()) closeAbout();

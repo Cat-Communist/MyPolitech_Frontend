@@ -26,6 +26,16 @@ window.Screens = (function () {
     });
   }
 
+  /* Форма слова после числа: forms — ['фотография', 'фотографии', 'фотографий']. */
+  function plural(n, forms) {
+    var a = n % 100;
+    var b = n % 10;
+    if (a > 10 && a < 20) return forms[2];
+    if (b === 1) return forms[0];
+    if (b > 1 && b < 5) return forms[1];
+    return forms[2];
+  }
+
   function clone(tplId) {
     var frag = document.getElementById(tplId).content.cloneNode(true);
     fill(frag);
@@ -33,7 +43,7 @@ window.Screens = (function () {
   }
 
   /* Эти экраны свёрстаны только под альбомную сцену; в портретном окне она просто уменьшается. */
-  var LANDSCAPE_ONLY = ['gallery'];
+  var LANDSCAPE_ONLY = ['gallery', 'history'];
 
   /* Кнопки «Об игре» и «Звук» есть только на этих экранах; на остальных угол занят шапкой. */
   var WITH_CORNER = ['menu', 'stub'];
@@ -214,6 +224,7 @@ window.Screens = (function () {
     parallax: parallax,
     show: show,
     clone: clone,
+    plural: plural,
     currentScreen: function () { return current; },
     setProgress: setProgress,
     setSound: setSound,
