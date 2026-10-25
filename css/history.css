@@ -51,6 +51,7 @@
 .board__core-sub{font-family:var(--font-mono);font-size:14px;opacity:.8}
 
 /* Узел института: плашка и под ней ряд «пинов» — по одному на направление. */
+/* Ширину узла задаёт history.js: при большом числе институтов узлы уже. */
 .node{
   position:absolute;
   width:230px;
@@ -67,7 +68,7 @@
 .node--pins-above{flex-direction:column-reverse}
 
 .node__box{
-  width:230px;
+  width:100%;
   height:64px;
   display:flex;
   align-items:center;
@@ -105,6 +106,11 @@
 .node__text{display:flex;flex-direction:column;gap:2px;min-width:0}
 .node__label{font-size:18px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .node__sub{font-family:var(--font-mono);font-size:13px;opacity:.75;white-space:nowrap}
+
+/* Узкий узел: без значка-чипа и с подписью помельче, иначе «Институт 12» не помещается. */
+.node--narrow .node__box{padding:0 12px}
+.node--narrow .node__chip{display:none}
+.node--narrow .node__label{font-size:16px}
 
 .node__pins{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;min-height:14px}
 .node__pin{

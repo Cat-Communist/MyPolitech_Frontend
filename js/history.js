@@ -6,16 +6,23 @@ window.HistoryBoard = (function () {
 
   var SVG_NS = 'http://www.w3.org/2000/svg';
 
-  /* Плата 1060×730, чип в центре, институты — по эллипсу вокруг него. */
+  /* Плата 1060×730, чип в центре, институты вокруг него. */
+  var BOARD_W = 1060;
   var CX = 530;
   var CY = 365;
   var RX = 385;
   var RY = 255;
   var CORE_HW = 120;    /* половина ширины чипа (с запасом под выводы) */
   var CORE_HH = 65;     /* половина высоты чипа */
-  var NODE_HW = 115;    /* половина ширины узла */
+  var NODE_W = 230;     /* ширина узла; узкие варианты — для большого числа институтов */
+  var NARROW_W = [170, 150];
   var NODE_HH = 32;     /* половина высоты узла */
   var PINS_H = 22;      /* ряд «пинов» под узлом вместе с отступом */
+  var EDGE = 14;        /* отступ узлов от краёв платы */
+  var TRACK_TOP = 68;   /* центры верхнего и нижнего ряда узлов на контуре */
+  var TRACK_BOTTOM = 640;
+  var MIN_GAP = 8;      /* меньший зазор между узлами считается наложением */
+  var PHASES = 40;      /* сколько сдвигов вдоль контура перебирать */
 
   var T = window.CONFIG.texts;
 
@@ -49,9 +56,8 @@ window.HistoryBoard = (function () {
     return 'M' + sx + ' ' + sy + ' V' + m + ' L' + tx + ' ' + (m + gy * ax) + ' V' + ty;
   }
 
-  /* Положение узлов и дорожек для n институтов. Первый узел сверху, дальше по часовой стрелке;
-     дорожка выходит из ближайшей к узлу стороны чипа и входит в ближайшую сторону узла. */
-  function layout(n) {
+  /* Центры узлов по эллипсу из макета. Первый узел сверху, дальше по часовой стрелке. */
+  function ellipsePoints(n) {
     var angles = [];
     if (n === 1) angles = [0];
     else if (n === 2) angles = [180, 0];
@@ -59,8 +65,90 @@ window.HistoryBoard = (function () {
 
     return angles.map(function (a) {
       var r = a * Math.PI / 180;
-      var nx = Math.round(CX + RX * Math.cos(r));
-      var ny = Math.round(CY + RY * Math.sin(r));
+      return { x: Math.round(CX + RX * Math.cos(r)), y: Math.round(CY + RY * Math.sin(r)) };
+    });
+  }
+
+  /* Центры узлов на прямоугольном контуре вдоль краёв платы, на равных расстояниях.
+     Отсчёт — от середины верхней стороны по часовой стрелке, phase сдвигает все узлы вдоль контура. */
+  function trackPoints(n, w, phase) {
+    var x0 = w / 2 + EDGE;
+    var x1 = BOARD_W - w / 2 - EDGE;
+    var W = x1 - x0;
+    var H = TRACK_BOTTOM - TRACK_TOP;
+    var P = 2 * (W + H);
+    var pts = [];
+
+    for (var i = 0; i < n; i++) {
+      var s = ((i / n + phase) % 1 * P + W / 2) % P;
+      var x, y;
+      if (s < W) { x = x0 + s; y = TRACK_TOP; }
+      else if (s < W + H) { x = x1; y = TRACK_TOP + s - W; }
+      else if (s < 2 * W + H) { x = x1 - (s - W - H); y = TRACK_BOTTOM; }
+      else { x = x0; y = TRACK_BOTTOM - (s - 2 * W - H); }
+      pts.push({ x: Math.round(x), y: Math.round(y) });
+    }
+    return pts;
+  }
+
+  function pinsAbove(p) { return p.y < CY - 100; }
+
+  /* Наименьший зазор между прямоугольниками узлов вместе с рядом «пинов»; отрицательный — наложение. */
+  function minGap(pts, w) {
+    var boxes = pts.map(function (p) {
+      var up = pinsAbove(p);
+      return {
+        l: p.x - w / 2,
+        r: p.x + w / 2,
+        t: p.y - NODE_HH - (up ? PINS_H : 0),
+        b: p.y + NODE_HH + (up ? 0 : PINS_H),
+      };
+    });
+    var gap = Infinity;
+    for (var i = 0; i < boxes.length; i++) {
+      for (var j = i + 1; j < boxes.length; j++) {
+        var a = boxes[i];
+        var c = boxes[j];
+        var gx = Math.max(c.l - a.r, a.l - c.r);
+        var gy = Math.max(c.t - a.b, a.t - c.b);
+        gap = Math.min(gap, Math.max(gx, gy));
+      }
+    }
+    return gap;
+  }
+
+  /* Лучшее положение на контуре для узлов ширины w: перебираем сдвиги, берём самый просторный. */
+  function bestTrack(n, w) {
+    var best = null;
+    for (var k = 0; k < PHASES; k++) {
+      var pts = trackPoints(n, w, k / PHASES / n);
+      var gap = minGap(pts, w);
+      if (!best || gap > best.gap) best = { w: w, pts: pts, gap: gap };
+    }
+    return best;
+  }
+
+  /* Пока узлам хватает места на эллипсе — раскладка из макета. Дальше — контур вдоль краёв платы,
+     сначала с обычными узлами, потом с узкими. Берётся первый вариант без наложений;
+     если такого нет, самый просторный из всех. */
+  function placeNodes(n) {
+    var pts = ellipsePoints(n);
+    var options = [{ w: NODE_W, pts: pts, gap: minGap(pts, NODE_W) }];
+    [NODE_W].concat(NARROW_W).forEach(function (w) { options.push(bestTrack(n, w)); });
+
+    for (var i = 0; i < options.length; i++) if (options[i].gap >= MIN_GAP) return options[i];
+    return options.reduce(function (a, b) { return b.gap > a.gap ? b : a; });
+  }
+
+  /* Положение узлов и дорожек для n институтов. Дорожка выходит из ближайшей к узлу
+     стороны чипа и входит в ближайшую сторону узла. */
+  function layout(n) {
+    var place = placeNodes(n);
+    var hw = place.w / 2;
+
+    return place.pts.map(function (p) {
+      var nx = p.x;
+      var ny = p.y;
       var side = Math.abs(nx - CX) / CORE_HW > Math.abs(ny - CY) / CORE_HH;
       var sx, sy, tx, ty, g;
 
@@ -68,7 +156,7 @@ window.HistoryBoard = (function () {
         g = Math.sign(nx - CX);
         sx = CX + g * CORE_HW;
         sy = CY + clamp(Math.round((ny - CY) * 0.3), -50, 50);
-        tx = nx - g * NODE_HW;
+        tx = nx - g * hw;
         ty = ny;
       } else {
         g = Math.sign(ny - CY) || -1;
@@ -78,7 +166,7 @@ window.HistoryBoard = (function () {
         ty = ny - g * NODE_HH;
       }
 
-      return { nx: nx, ny: ny, sx: sx, sy: sy, d: route(sx, sy, tx, ty), pinsAbove: ny < CY - 100 };
+      return { nx: nx, ny: ny, w: place.w, sx: sx, sy: sy, d: route(sx, sy, tx, ty), pinsAbove: pinsAbove(p) };
     });
   }
 
@@ -137,7 +225,9 @@ window.HistoryBoard = (function () {
       node.dataset.inst = i;
       node.classList.toggle('is-active', active);
       node.classList.toggle('node--pins-above', l.pinsAbove);
-      node.style.left = (l.nx - NODE_HW) + 'px';
+      node.classList.toggle('node--narrow', l.w < NODE_W);
+      node.style.width = l.w + 'px';
+      node.style.left = (l.nx - l.w / 2) + 'px';
       node.style.top = (l.ny - NODE_HH - (l.pinsAbove ? PINS_H : 0)) + 'px';
       node.querySelector('[data-slot="label"]').textContent = it.short || T.instituteNode + ' ' + pad(i + 1);
       node.querySelector('[data-slot="sub"]').textContent = dirCount(it.directions.length);
