@@ -1,0 +1,299 @@
+/* Музей: анфилада залов с витринами и экспонат крупно. Сцена всегда альбомная, 1600×900. */
+
+.museum{position:absolute;inset:0}
+.hall-screen,
+.exhibit{position:absolute;inset:0;animation:pp-in .4s ease-out both}
+
+/* Анфилада: залы — арочные проходы. Поля по краям, чтобы подсветка не обрезалась прокруткой. */
+.arches{
+  position:absolute;
+  left:34px;
+  right:34px;
+  top:116px;
+  height:130px;
+  display:flex;
+  align-items:flex-end;
+  gap:12px;
+  padding:6px;
+  overflow-x:auto;
+  overflow-y:hidden;
+}
+.arch{
+  flex:1 0 220px;
+  min-width:0;
+  height:100px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  gap:6px;
+  padding:0 22px 16px;
+  border:1.5px solid var(--c-line);
+  border-bottom-width:4px;
+  border-radius:70px 70px 10px 10px;
+  cursor:pointer;
+  text-align:left;
+  background:var(--c-surface);
+  transition:height .22s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.arch:hover{border-color:var(--c-blue)}
+.arch.is-active{height:118px;border-color:var(--c-blue);box-shadow:0 0 0 5px var(--c-glow)}
+.arch__num{font-family:var(--font-mono);font-size:15px;color:var(--c-ink-dim)}
+.arch.is-active .arch__num{color:var(--c-blue)}
+.arch__name{
+  font-size:21px;
+  font-weight:800;
+  color:var(--c-ink);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.arch__years{font-family:var(--font-mono);font-size:15px;color:var(--c-ink-dim)}
+
+/* Панель зала */
+
+.hall-panel{
+  position:absolute;
+  left:40px;
+  top:262px;
+  width:380px;
+  bottom:40px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  padding:34px 32px;
+  border:1.5px solid var(--c-line);
+  border-radius:16px;
+  background:var(--c-surface);
+}
+.hall-panel__label{
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--c-teal);
+}
+.hall-panel__name{font-size:40px;font-weight:800;line-height:1.1}
+.hall-panel__years{font-family:var(--font-mono);font-size:22px;color:var(--c-blue)}
+.hall-panel__about{
+  margin:0;
+  min-height:0;
+  overflow:auto;
+  font-size:19px;
+  line-height:1.55;
+  font-weight:500;
+  color:var(--c-ink-dim);
+  text-wrap:pretty;
+}
+.hall-panel__spacer{flex:1}
+.hall-panel__count{font-size:17px;font-weight:600;color:var(--c-ink-dim)}
+
+/* Пара кнопок «назад / вперёд» внизу панели */
+
+.pair{flex:none;display:flex;gap:12px}
+.pair__btn{
+  flex:1;
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border:1.5px solid var(--c-line);
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:700;
+  font-size:17px;
+  background:var(--c-surface);
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+}
+.pair__btn:hover{
+  transform:translateY(-2px);
+  border-color:var(--c-blue);
+  box-shadow:0 0 0 4px var(--c-glow);
+}
+.pair__btn:active{transform:translateY(1px)}
+.pair__btn--primary{border-color:var(--c-blue);color:#fff;background:var(--c-blue)}
+.pair__btn--primary:hover{background:var(--c-blue-deep);box-shadow:0 0 0 5px var(--c-glow)}
+.pair__btn:disabled{opacity:.4;cursor:default;transform:none;box-shadow:none}
+.pair__icon{
+  flex:none;
+  fill:none;
+  stroke:var(--c-blue);
+  stroke-width:2.6;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.pair__btn--primary .pair__icon{stroke:currentColor}
+
+/* Витрины: две строки по три; если экспонатов больше, сетка прокручивается.
+   Поля по краям — чтобы подъём и подсветка карточки не обрезались. */
+.cases{
+  position:absolute;
+  left:438px;
+  right:34px;
+  top:256px;
+  bottom:34px;
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  grid-auto-rows:calc((100% - 22px) / 2);
+  gap:22px;
+  padding:6px;
+  overflow-y:auto;
+}
+.case{
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  padding:0;
+  border:1.5px solid var(--c-line);
+  border-radius:14px;
+  overflow:hidden;
+  cursor:pointer;
+  text-align:left;
+  background:var(--c-surface);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.case:hover{
+  transform:translateY(-4px);
+  border-color:var(--c-blue);
+  box-shadow:0 0 0 5px var(--c-glow), 0 18px 36px rgba(10,102,255,.18);
+}
+
+/* Стекло витрины: подложка, фото и блик. */
+.glass{
+  position:relative;
+  flex:1;
+  min-height:0;
+  display:flex;
+  margin:12px 12px 0;
+  padding:14px;
+  border:1.5px solid var(--c-line);
+  border-radius:8px;
+  background:var(--c-bg);
+}
+.glass__photo{
+  position:relative;
+  flex:1;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:4px;
+  background:var(--c-photo);
+  font-size:15px;
+  font-weight:600;
+  color:var(--c-photo-ink);
+}
+.glass__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+/* Блик — мягкий светлый отсвет из угла, без резких полос. */
+.glass__glare{
+  position:absolute;
+  inset:0;
+  border-radius:8px;
+  background:linear-gradient(115deg, rgba(255,255,255,.38) 0%, rgba(255,255,255,.14) 28%, rgba(255,255,255,0) 46%);
+  pointer-events:none;
+}
+
+.case__plate{display:flex;align-items:center;gap:14px;padding:14px 18px 16px}
+.case__year{flex:none;font-family:var(--font-mono);font-size:18px;color:var(--c-blue)}
+.case__rule{width:1.5px;align-self:stretch;background:var(--c-line)}
+.case__text{display:flex;flex-direction:column;gap:2px;min-width:0}
+.case__name{font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.case__code{font-family:var(--font-mono);font-size:13px;color:var(--c-ink-dim)}
+
+/* Экспонат крупно */
+
+.exhibit .head{gap:16px}
+.exhibit__titles{padding-left:12px}
+
+.exhibit__stage{
+  position:absolute;
+  left:40px;
+  top:130px;
+  width:940px;
+  height:730px;
+  display:flex;
+  padding:28px;
+  border:1.5px solid var(--c-line);
+  border-radius:16px;
+  background:var(--c-surface);
+}
+.glass--big{margin:0;padding:24px}
+.glass--big .glass__photo{font-size:24px}
+.glass--big .glass__photo.is-stub{
+  background-image:repeating-linear-gradient(135deg, rgba(255,255,255,.22) 0 2px, transparent 2px 16px);
+}
+/* Крупно экспонат показывается целиком, без обрезки. */
+.glass--big .glass__img{object-fit:contain}
+
+.label{
+  position:absolute;
+  left:1004px;
+  right:40px;
+  top:130px;
+  height:730px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  padding:32px 30px;
+  border:1.5px solid var(--c-line);
+  border-radius:16px;
+  background:var(--c-surface);
+}
+.label__code{font-family:var(--font-mono);font-size:15px;color:var(--c-ink-dim)}
+.label__name{font-size:36px;font-weight:800;line-height:1.12}
+.label__year{font-family:var(--font-mono);font-size:44px;line-height:1;color:var(--c-blue)}
+.label__about{
+  margin:0;
+  min-height:0;
+  overflow:auto;
+  font-size:18px;
+  line-height:1.55;
+  font-weight:500;
+  color:var(--c-ink-dim);
+  text-wrap:pretty;
+}
+.label__rows{flex:none;display:flex;flex-direction:column;border-top:1.5px solid var(--c-line)}
+.label__row{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  padding:11px 0;
+  border-bottom:1.5px solid var(--c-line);
+  font-size:16px;
+}
+.label__key{flex:none;font-weight:600;color:var(--c-ink-dim)}
+.label__value{font-weight:600;text-align:right}
+.label__value--mono{font-family:var(--font-mono);font-weight:400}
+.label__spacer{flex:1}
+.label__caption{
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--c-ink-dim);
+}
+
+/* Соседи по витрине: если экспонатов много, ряд прокручивается. */
+.label__thumbs{
+  flex:none;
+  height:68px;
+  display:flex;
+  gap:8px;
+  margin:0 -6px;
+  padding:6px;
+  overflow-x:auto;
+  overflow-y:hidden;
+}
+.neighbour{
+  position:relative;
+  flex:1 0 44px;
+  overflow:hidden;
+  padding:0;
+  border:2.5px solid transparent;
+  border-radius:6px;
+  cursor:pointer;
+  background:var(--c-photo);
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.neighbour:hover{transform:translateY(-2px)}
+.neighbour.is-active{border-color:var(--c-blue);box-shadow:0 0 0 4px var(--c-glow)}

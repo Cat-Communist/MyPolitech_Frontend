@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="css/menu.css">
 <link rel="stylesheet" href="css/gallery.css">
 <link rel="stylesheet" href="css/history.css">
+<link rel="stylesheet" href="css/museum.css">
 </head>
 <body>
 
@@ -416,6 +417,126 @@
   </div>
 </template>
 
+<!-- Музей: контейнер раздела; museum.js кладёт в него зал или экспонат. -->
+<template id="tpl-museum">
+  <div class="museum" id="museum"></div>
+</template>
+
+<template id="tpl-museum-hall">
+  <div class="hall-screen">
+    <div class="head">
+      <button class="chip" type="button" data-go="menu">
+        <svg class="chip__icon" width="22" height="22" viewBox="0 0 28 28" aria-hidden="true">
+          <path d="M23 14 H6 M13 7 L6 14 L13 21"></path>
+        </svg>
+        <span data-text="back"></span>
+      </button>
+      <div class="head__titles">
+        <span class="head__kicker" data-text="museumTitle"></span>
+        <span class="head__title" data-text="hallsTitle"></span>
+      </div>
+      <img class="head__mark" data-img="mark" data-alt="markAlt" alt="">
+    </div>
+
+    <div class="arches" id="arches"></div>
+
+    <div class="hall-panel">
+      <span class="hall-panel__label" id="hall-label"></span>
+      <span class="hall-panel__name" id="hall-name"></span>
+      <span class="hall-panel__years" id="hall-years"></span>
+      <p class="hall-panel__about" id="hall-about"></p>
+      <div class="hall-panel__spacer"></div>
+      <span class="hall-panel__count" id="hall-count"></span>
+      <div class="pair">
+        <button class="pair__btn" type="button" id="hall-prev">
+          <svg class="pair__icon" width="18" height="18" viewBox="0 0 28 28" aria-hidden="true"><path d="M17 6 L9 14 L17 22"></path></svg>
+          <span data-text="hallPrev"></span>
+        </button>
+        <button class="pair__btn pair__btn--primary" type="button" id="hall-next">
+          <span data-text="hallNext"></span>
+          <svg class="pair__icon" width="18" height="18" viewBox="0 0 28 28" aria-hidden="true"><path d="M11 6 L19 14 L11 22"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="cases" id="cases"></div>
+  </div>
+</template>
+
+<template id="tpl-museum-arch">
+  <button class="arch" type="button">
+    <span class="arch__num" data-slot="num"></span>
+    <span class="arch__name" data-slot="name"></span>
+    <span class="arch__years" data-slot="years"></span>
+  </button>
+</template>
+
+<template id="tpl-museum-case">
+  <button class="case" type="button">
+    <span class="glass">
+      <span class="glass__photo" data-slot="photo"></span>
+      <span class="glass__glare"></span>
+    </span>
+    <span class="case__plate">
+      <span class="case__year" data-slot="year"></span>
+      <span class="case__rule"></span>
+      <span class="case__text">
+        <span class="case__name" data-slot="name"></span>
+        <span class="case__code" data-slot="code"></span>
+      </span>
+    </span>
+  </button>
+</template>
+
+<template id="tpl-museum-exhibit">
+  <div class="exhibit">
+    <div class="head">
+      <button class="chip" type="button" data-go="menu">
+        <svg class="chip__icon" width="22" height="22" viewBox="0 0 28 28" aria-hidden="true">
+          <path d="M23 14 H6 M13 7 L6 14 L13 21"></path>
+        </svg>
+        <span data-text="back"></span>
+      </button>
+      <button class="chip chip--plain" type="button" id="btn-to-hall">
+        <span data-text="toHall"></span>
+      </button>
+      <div class="head__titles exhibit__titles">
+        <span class="head__kicker" id="exhibit-kicker"></span>
+        <span class="head__title" data-text="exhibitTitle"></span>
+      </div>
+      <img class="head__mark" data-img="mark" data-alt="markAlt" alt="">
+    </div>
+
+    <div class="exhibit__stage">
+      <div class="glass glass--big">
+        <div class="glass__photo" id="exhibit-photo"></div>
+        <div class="glass__glare"></div>
+      </div>
+    </div>
+
+    <div class="label">
+      <span class="label__code" id="exhibit-code"></span>
+      <span class="label__name" id="exhibit-name"></span>
+      <span class="label__year" id="exhibit-year"></span>
+      <p class="label__about" id="exhibit-about"></p>
+      <div class="label__rows" id="exhibit-rows"></div>
+      <div class="label__spacer"></div>
+      <span class="label__caption" data-text="inThisHall"></span>
+      <div class="label__thumbs" id="exhibit-thumbs"></div>
+      <div class="pair">
+        <button class="pair__btn" type="button" id="exhibit-prev">
+          <svg class="pair__icon" width="18" height="18" viewBox="0 0 28 28" aria-hidden="true"><path d="M17 6 L9 14 L17 22"></path></svg>
+          <span data-text="exhibitPrev"></span>
+        </button>
+        <button class="pair__btn pair__btn--primary" type="button" id="exhibit-next">
+          <span data-text="exhibitNext"></span>
+          <svg class="pair__icon" width="18" height="18" viewBox="0 0 28 28" aria-hidden="true"><path d="M11 6 L19 14 L11 22"></path></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
 <template id="tpl-corner">
   <div class="corner" id="corner" data-sound="off">
     <button class="corner__btn" type="button" id="btn-about">
@@ -453,9 +574,11 @@
 <script src="js/config.js"></script>
 <script src="js/data/gallery.js"></script>
 <script src="js/data/history.js"></script>
+<script src="js/data/museum.js"></script>
 <script src="js/screens.js"></script>
 <script src="js/gallery.js"></script>
 <script src="js/history.js"></script>
+<script src="js/museum.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
