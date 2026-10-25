@@ -34,11 +34,12 @@ window.Screens = (function () {
     s.setProperty('--stage-w', W + 'px');
     s.setProperty('--stage-h', H + 'px');
     s.setProperty('--stage-scale', String(scale));
-    s.setProperty('--modes-dir', portrait ? 'column' : 'row');
-    s.setProperty('--mode-w', portrait ? '760px' : '680px');
-    s.setProperty('--mark-h', portrait ? '220px' : '150px');
-    s.setProperty('--title-size', portrait ? '76px' : '78px');
-    s.setProperty('--menu-gap', portrait ? '40px' : '28px');
+    s.setProperty('--menu-dir', portrait ? 'column' : 'row');
+    s.setProperty('--brand-align', portrait ? 'center' : 'flex-start');
+    s.setProperty('--mode-w', portrait ? '760px' : '700px');
+    s.setProperty('--mark-h', portrait ? '200px' : '150px');
+    s.setProperty('--title-size', portrait ? '84px' : '92px');
+    s.setProperty('--menu-gap', portrait ? '72px' : '120px');
     s.setProperty('--foot-w', portrait ? '600px' : '340px');
   }
 

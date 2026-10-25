@@ -21,11 +21,12 @@
   --stage-w:1600px;
   --stage-h:900px;
   --stage-scale:1;
-  --modes-dir:row;
-  --mode-w:680px;
+  --menu-dir:row;
+  --brand-align:flex-start;
+  --mode-w:700px;
   --mark-h:150px;
-  --title-size:78px;
-  --menu-gap:28px;
+  --title-size:92px;
+  --menu-gap:120px;
   --foot-w:340px;
   --progress:0%;
 }

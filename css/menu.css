@@ -122,15 +122,23 @@
   position:absolute;
   inset:0;
   display:flex;
-  flex-direction:column;
+  flex-direction:var(--menu-dir);
   align-items:center;
   justify-content:center;
   gap:var(--menu-gap);
   padding:60px;
   animation:pp-in .45s ease-out both;
 }
-.menu__mark{height:var(--mark-h);width:auto;display:block}
-.menu__head{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
+
+.menu__brand{
+  display:flex;
+  flex-direction:column;
+  align-items:var(--brand-align);
+  text-align:var(--brand-align);
+  gap:18px;
+  max-width:660px;
+}
+.menu__mark{height:var(--mark-h);width:auto;display:block;margin-bottom:10px}
 .menu__title{
   margin:0;
   padding-bottom:6px;
@@ -145,15 +153,16 @@
   color:transparent;
 }
 .menu__tagline{margin:0;font-size:24px;font-weight:500;color:var(--c-ink-dim)}
-.menu__modes{display:flex;flex-direction:var(--modes-dir);gap:36px;margin-top:14px}
+
+.menu__modes{display:flex;flex-direction:column;gap:26px}
 
 .mode{
   width:var(--mode-w);
-  height:160px;
+  height:150px;
   display:flex;
   align-items:center;
-  gap:30px;
-  padding:0 36px 0 40px;
+  gap:28px;
+  padding:0 36px;
   border:1.5px solid var(--c-line);
   border-radius:16px;
   cursor:pointer;
@@ -163,7 +172,7 @@
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 .mode:hover{
-  transform:translateY(-4px);
+  transform:translateX(-6px);
   border-color:var(--c-blue);
   box-shadow:0 0 0 5px var(--c-glow), 0 18px 36px rgba(10,102,255,.18);
 }
@@ -171,6 +180,12 @@
   transform:translateY(1px);
   border-color:var(--c-blue);
   box-shadow:0 0 0 3px var(--c-glow), 0 4px 10px rgba(10,102,255,.14);
+}
+.mode__num{
+  flex:none;
+  font-family:var(--font-mono);
+  font-size:20px;
+  color:var(--c-ink-dim);
 }
 .mode__icon{
   flex:none;
@@ -180,8 +195,8 @@
   stroke-linejoin:round;
   stroke-linecap:round;
 }
-.mode__text{display:flex;flex-direction:column;gap:10px;min-width:0;flex:1}
-.mode__title{font-weight:700;font-size:34px;line-height:1.1;white-space:nowrap}
+.mode__text{display:flex;flex-direction:column;gap:8px;min-width:0;flex:1}
+.mode__title{font-weight:700;font-size:32px;line-height:1.1;white-space:nowrap}
 .mode__desc{font-size:20px;font-weight:500;color:var(--c-ink-dim);white-space:nowrap}
 .mode__arrow{
   flex:none;
@@ -190,7 +205,9 @@
   stroke-width:2.5;
   stroke-linecap:round;
   stroke-linejoin:round;
+  transition:transform .18s ease;
 }
+.mode:hover .mode__arrow{transform:translateX(4px)}
 
 .footer{
   position:absolute;

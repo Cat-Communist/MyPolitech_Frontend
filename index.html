@@ -38,16 +38,16 @@
 
 <template id="tpl-menu">
   <div class="menu">
-    <img class="menu__mark" data-img="mark" data-alt="markAlt" alt="">
-
-    <div class="menu__head">
+    <div class="menu__brand">
+      <img class="menu__mark" data-img="mark" data-alt="markAlt" alt="">
       <h1 class="menu__title" data-text="title"></h1>
       <p class="menu__tagline" data-text="tagline"></p>
     </div>
 
     <div class="menu__modes">
-      <button class="mode" type="button" data-mode="alumni">
-        <svg class="mode__icon" width="68" height="68" viewBox="0 0 68 68" aria-hidden="true">
+      <button class="mode" type="button" data-mode="gallery">
+        <span class="mode__num">01</span>
+        <svg class="mode__icon" width="60" height="60" viewBox="0 0 68 68" aria-hidden="true">
           <rect x="6" y="16" width="46" height="38" rx="3"></rect>
           <path d="M14 10 H60 V46"></path>
           <circle cx="38" cy="29" r="4"></circle>
@@ -55,24 +55,42 @@
           <path d="M28 40 L34 34 L52 50"></path>
         </svg>
         <span class="mode__text">
-          <span class="mode__title" data-text="alumniTitle"></span>
-          <span class="mode__desc" data-text="alumniDesc"></span>
+          <span class="mode__title" data-text="galleryTitle"></span>
+          <span class="mode__desc" data-text="galleryDesc"></span>
         </span>
         <svg class="mode__arrow" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
           <path d="M5 14 H22 M15 7 L22 14 L15 21"></path>
         </svg>
       </button>
 
-      <button class="mode" type="button" data-mode="applicants">
-        <svg class="mode__icon" width="68" height="68" viewBox="0 0 68 68" aria-hidden="true">
+      <button class="mode" type="button" data-mode="history">
+        <span class="mode__num">02</span>
+        <svg class="mode__icon" width="60" height="60" viewBox="0 0 68 68" aria-hidden="true">
           <circle cx="34" cy="34" r="27"></circle>
           <polygon points="44,24 38,38 24,44 30,30"></polygon>
           <circle cx="34" cy="34" r="2"></circle>
           <path d="M34 7 V12 M34 56 V61 M7 34 H12 M56 34 H61"></path>
         </svg>
         <span class="mode__text">
-          <span class="mode__title" data-text="applicantsTitle"></span>
-          <span class="mode__desc" data-text="applicantsDesc"></span>
+          <span class="mode__title" data-text="historyTitle"></span>
+          <span class="mode__desc" data-text="historyDesc"></span>
+        </span>
+        <svg class="mode__arrow" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+          <path d="M5 14 H22 M15 7 L22 14 L15 21"></path>
+        </svg>
+      </button>
+
+      <button class="mode" type="button" data-mode="games">
+        <span class="mode__num">03</span>
+        <svg class="mode__icon" width="60" height="60" viewBox="0 0 68 68" aria-hidden="true">
+          <path d="M20 18 H48 C58 18 64 28 64 40 C64 50 58 54 52 52 L44 44 H24 L16 52 C10 54 4 50 4 40 C4 28 10 18 20 18 Z"></path>
+          <path d="M20 26 V38 M14 32 H26"></path>
+          <circle cx="44" cy="29" r="2.5"></circle>
+          <circle cx="51" cy="35" r="2.5"></circle>
+        </svg>
+        <span class="mode__text">
+          <span class="mode__title" data-text="gamesTitle"></span>
+          <span class="mode__desc" data-text="gamesDesc"></span>
         </span>
         <svg class="mode__arrow" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
           <path d="M5 14 H22 M15 7 L22 14 L15 21"></path>
