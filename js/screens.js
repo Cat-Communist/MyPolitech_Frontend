@@ -19,6 +19,10 @@ window.Screens = (function () {
       el.alt = T[el.dataset.alt];
     });
 
+    root.querySelectorAll('[data-placeholder]').forEach(function (el) {
+      el.placeholder = T[el.dataset.placeholder];
+    });
+
     /* Подсказка для кнопок без текста: её читает скринридер и показывает браузер при наведении. */
     root.querySelectorAll('[data-alt-text]').forEach(function (el) {
       el.title = T[el.dataset.altText];
@@ -43,7 +47,7 @@ window.Screens = (function () {
   }
 
   /* Эти экраны свёрстаны только под альбомную сцену; в портретном окне она просто уменьшается. */
-  var LANDSCAPE_ONLY = ['gallery', 'history', 'museum', 'reviews'];
+  var LANDSCAPE_ONLY = ['gallery', 'history', 'museum', 'reviews', 'review-form'];
 
   /* Кнопки «Об игре» и «Звук» есть только на этих экранах; на остальных угол занят шапкой. */
   var WITH_CORNER = ['menu', 'stub'];

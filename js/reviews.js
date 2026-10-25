@@ -100,6 +100,7 @@ window.Reviews = (function () {
     var el = e.target;
     var pill = el.closest('.pill');
     if (pill) { setFilter(pill.dataset.institute || null); return; }
+    if (el.closest('#btn-write')) { if (hooks.write) hooks.write(); return; }
     if (el.closest('#btn-more')) {
       shown += PAGE;
       renderFeed();

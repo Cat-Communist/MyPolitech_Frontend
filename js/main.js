@@ -73,6 +73,15 @@
       window.Reviews.init(document.getElementById('reviews'), {
         pick: function () { blip(700, 0.05); },
         more: function () { blip(660, 0.05); },
+        write: function () { blip(880, 0.08); SECTIONS['review-form'](); },
+      });
+    },
+    'review-form': function () {
+      show('review-form');
+      window.ReviewForm.init(document.getElementById('review-form'), {
+        back: function () { blip(440); SECTIONS.reviews(); },
+        invalid: function () { blip(300, 0.12, 'triangle', 0.05); },
+        sent: function () { blip(990, 0.15); },
       });
     },
   };
@@ -112,6 +121,7 @@
     if (mode) { openMode(mode.dataset.mode); return; }
 
     if (el.closest('#btn-back, [data-go="menu"]')) { goMenu(); return; }
+    if (el.closest('[data-go="reviews"]')) { blip(440); SECTIONS.reviews(); return; }
     if (el.closest('#btn-about')) { openAbout(); return; }
     if (el.closest('#btn-sound')) { toggleSound(); return; }
     if (el.closest('#btn-about-ok')) { closeAbout(); return; }
@@ -122,7 +132,7 @@
   });
 
   /* mouseover, в отличие от mouseenter, всплывает; отсеиваем перемещения внутри кнопки. */
-  var HOVER_SELECTOR = '.mode, #btn-back, #btn-about, #btn-about-ok, .chip, .round, .viewer__all, .btn-primary, .dir-page__btn, .pair__btn, .btn-write, .feed__more-btn';
+  var HOVER_SELECTOR = '.mode, #btn-back, #btn-about, #btn-about-ok, .chip, .round, .viewer__all, .btn-primary, .dir-page__btn, .pair__btn, .btn-write, .feed__more-btn, .rform__submit, .thanks__primary, .thanks__again';
   document.addEventListener('mouseover', function (e) {
     var el = e.target.closest(HOVER_SELECTOR);
     if (!el) return;
@@ -145,6 +155,7 @@
     if (screen === 'gallery' && window.Gallery.key(e)) return;
     if (screen === 'history' && window.HistoryBoard.key(e)) return;
     if (screen === 'museum' && window.Museum.key(e)) return;
+    if (screen === 'review-form' && window.ReviewForm.key(e)) return;
 
     if (e.key !== 'Escape') return;
     if (S.isAboutOpen()) closeAbout();

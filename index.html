@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="css/history.css">
 <link rel="stylesheet" href="css/museum.css">
 <link rel="stylesheet" href="css/reviews.css">
+<link rel="stylesheet" href="css/review-form.css">
 </head>
 <body>
 
@@ -594,6 +595,128 @@
   </article>
 </template>
 
+<!-- Форма отзыва. Данные никуда не отправляются: см. submitReview() в js/review-form.js. -->
+<template id="tpl-review-form">
+  <div class="rform" id="review-form">
+    <div class="head">
+      <button class="chip" type="button" data-go="menu">
+        <svg class="chip__icon" width="22" height="22" viewBox="0 0 28 28" aria-hidden="true">
+          <path d="M23 14 H6 M13 7 L6 14 L13 21"></path>
+        </svg>
+        <span data-text="back"></span>
+      </button>
+      <button class="chip chip--plain" type="button" data-go="reviews">
+        <span data-text="allReviews"></span>
+      </button>
+      <div class="head__titles"></div>
+      <img class="head__mark" data-img="mark" data-alt="markAlt" alt="">
+    </div>
+
+    <div class="rform__intro">
+      <span class="rform__kicker" data-text="reviewsFull"></span>
+      <h2 class="rform__title" data-text="formTitle"></h2>
+      <p class="rform__lead" data-text="formLead"></p>
+      <div class="rform__notes">
+        <div class="rform__note"><span class="rform__note-num">01</span><span data-text="formNote1"></span></div>
+        <div class="rform__note"><span class="rform__note-num">02</span><span data-text="formNote2"></span></div>
+        <div class="rform__note"><span class="rform__note-num">03</span><span data-text="formNote3"></span></div>
+      </div>
+    </div>
+
+    <form class="rform__card" id="rform-card" novalidate>
+      <div class="rform__summary" id="rform-summary" hidden>
+        <svg class="rform__summary-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle><path d="M12 7 V13"></path><circle class="rform__dot" cx="12" cy="16.5" r=".8"></circle>
+        </svg>
+        <span id="rform-summary-text"></span>
+      </div>
+
+      <div class="rform__grid">
+        <div class="rform__col">
+          <label class="field">
+            <span class="field__label"><span data-text="fieldName"></span> <span class="field__star">*</span></span>
+            <input class="field__input" name="name" type="text" autocomplete="name" data-placeholder="namePlaceholder">
+            <span class="field__error" data-err="name"></span>
+          </label>
+          <label class="field">
+            <span class="field__label"><span data-text="fieldYear"></span> <span class="field__star">*</span></span>
+            <input class="field__input field__input--mono" name="year" type="text" inputmode="numeric" maxlength="4" data-placeholder="yearPlaceholder">
+            <span class="field__error" data-err="year"></span>
+          </label>
+          <label class="field">
+            <span class="field__label"><span data-text="fieldDirection"></span> <span class="field__star">*</span></span>
+            <span class="select">
+              <select class="field__input select__box" name="direction" id="rform-direction"></select>
+              <svg class="select__arrow" width="18" height="18" viewBox="0 0 28 28" aria-hidden="true"><path d="M6 11 L14 19 L22 11"></path></svg>
+            </span>
+            <span class="field__error" data-err="direction"></span>
+          </label>
+          <div class="field field--grow">
+            <span class="field__label"><span data-text="fieldPhoto"></span> <span class="field__optional" data-text="optional"></span></span>
+            <label class="drop" id="rform-drop">
+              <svg class="drop__icon" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+                <rect x="3" y="6" width="22" height="17" rx="3"></rect><circle cx="14" cy="14.5" r="4.5"></circle><path d="M10 6 L11.5 3.5 H16.5 L18 6"></path>
+              </svg>
+              <span><span data-text="dropHint"></span> <span class="drop__link" data-text="dropPick"></span></span>
+              <input class="drop__input" type="file" accept="image/*" id="rform-file">
+            </label>
+            <div class="attached" id="rform-attached" hidden>
+              <img class="attached__thumb" id="rform-thumb" alt="">
+              <span class="attached__text">
+                <span class="attached__name" id="rform-filename"></span>
+                <span class="attached__note" data-text="photoAttached"></span>
+              </span>
+              <button class="attached__clear" type="button" id="rform-clear" data-alt-text="photoRemove">
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3 L13 13 M13 3 L3 13"></path></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <label class="field field--text">
+          <span class="field__label"><span data-text="fieldText"></span> <span class="field__star">*</span></span>
+          <textarea class="field__input field__area" name="text" maxlength="1000" data-placeholder="textPlaceholder"></textarea>
+          <span class="field__foot">
+            <span class="field__error" data-err="text"></span>
+            <span class="field__count" id="rform-count"></span>
+          </span>
+        </label>
+      </div>
+
+      <div class="rform__rule"></div>
+
+      <div class="rform__bottom">
+        <div class="agree">
+          <button class="agree__btn" type="button" role="checkbox" aria-checked="false" id="rform-agree">
+            <span class="agree__box">
+              <svg class="agree__tick" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3.5 9.5 L7.5 13 L14.5 5"></path></svg>
+            </span>
+            <span class="agree__text"><span data-text="agreeText"></span> <span class="agree__link" data-text="agreeLink"></span> <span class="field__star">*</span></span>
+          </button>
+          <span class="field__error" data-err="agree"></span>
+        </div>
+        <button class="rform__submit" type="submit">
+          <span data-text="submitReview"></span>
+          <svg class="rform__submit-icon" width="22" height="22" viewBox="0 0 28 28" aria-hidden="true"><path d="M5 14 H22 M15 7 L22 14 L15 21"></path></svg>
+        </button>
+      </div>
+    </form>
+
+    <div class="thanks" id="rform-thanks" hidden>
+      <span class="thanks__badge">
+        <svg width="54" height="54" viewBox="0 0 54 54" aria-hidden="true"><path d="M13 28 L23 38 L42 17"></path></svg>
+      </span>
+      <h3 class="thanks__title" data-text="thanksTitle"></h3>
+      <p class="thanks__sub" data-text="thanksSub"></p>
+      <p class="thanks__text" data-text="thanksText"></p>
+      <div class="thanks__actions">
+        <button class="thanks__primary" type="button" data-go="reviews"><span data-text="toReviews"></span></button>
+        <button class="thanks__again" type="button" id="rform-again" data-text="writeAgain"></button>
+      </div>
+    </div>
+  </div>
+</template>
+
 <template id="tpl-corner">
   <div class="corner" id="corner" data-sound="off">
     <button class="corner__btn" type="button" id="btn-about">
@@ -638,6 +761,7 @@
 <script src="js/history.js"></script>
 <script src="js/museum.js"></script>
 <script src="js/reviews.js"></script>
+<script src="js/review-form.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
