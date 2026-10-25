@@ -68,6 +68,13 @@
         step: function () { blip(660, 0.05); },
       });
     },
+    reviews: function () {
+      show('reviews');
+      window.Reviews.init(document.getElementById('reviews'), {
+        pick: function () { blip(700, 0.05); },
+        more: function () { blip(660, 0.05); },
+      });
+    },
   };
 
   function openMode(mode) {
@@ -115,7 +122,7 @@
   });
 
   /* mouseover, в отличие от mouseenter, всплывает; отсеиваем перемещения внутри кнопки. */
-  var HOVER_SELECTOR = '.mode, #btn-back, #btn-about, #btn-about-ok, .chip, .round, .viewer__all, .btn-primary, .dir-page__btn, .pair__btn';
+  var HOVER_SELECTOR = '.mode, #btn-back, #btn-about, #btn-about-ok, .chip, .round, .viewer__all, .btn-primary, .dir-page__btn, .pair__btn, .btn-write, .feed__more-btn';
   document.addEventListener('mouseover', function (e) {
     var el = e.target.closest(HOVER_SELECTOR);
     if (!el) return;

@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="css/gallery.css">
 <link rel="stylesheet" href="css/history.css">
 <link rel="stylesheet" href="css/museum.css">
+<link rel="stylesheet" href="css/reviews.css">
 </head>
 <body>
 
@@ -537,6 +538,62 @@
   </div>
 </template>
 
+<!-- Отзывы: лента; reviews.js заполняет фильтры и карточки из данных. -->
+<template id="tpl-reviews">
+  <div class="reviews" id="reviews">
+    <div class="head">
+      <button class="chip" type="button" data-go="menu">
+        <svg class="chip__icon" width="22" height="22" viewBox="0 0 28 28" aria-hidden="true">
+          <path d="M23 14 H6 M13 7 L6 14 L13 21"></path>
+        </svg>
+        <span data-text="back"></span>
+      </button>
+      <div class="head__titles">
+        <span class="head__kicker" data-text="reviewsTitle"></span>
+        <span class="head__title" data-text="reviewsFull"></span>
+      </div>
+      <button class="btn-write" type="button" id="btn-write">
+        <svg class="btn-write__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 20 L5 15 L15.5 4.5 A2.1 2.1 0 0 1 19.5 8.5 L9 19 Z"></path>
+        </svg>
+        <span data-text="writeReview"></span>
+      </button>
+      <img class="head__mark" data-img="mark" data-alt="markAlt" alt="">
+    </div>
+
+    <div class="filters">
+      <div class="filters__row" id="filters"></div>
+      <span class="filters__count" id="reviews-count"></span>
+    </div>
+
+    <div class="feed" id="feed">
+      <div class="feed__cols" id="feed-cols"></div>
+      <p class="feed__empty" id="feed-empty" data-text="noReviews" hidden></p>
+      <div class="feed__more">
+        <button class="feed__more-btn" type="button" id="btn-more" data-text="showMore"></button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-review">
+  <article class="review">
+    <svg class="review__quote" width="34" height="26" viewBox="0 0 34 26" aria-hidden="true">
+      <path d="M0 26 V14 C0 6 4 1 12 0 L13 4 C8 5 6 8 6 12 H12 V26 Z M20 26 V14 C20 6 24 1 32 0 L33 4 C28 5 26 8 26 12 H32 V26 Z"></path>
+    </svg>
+    <div class="review__photo" data-slot="photo" hidden></div>
+    <p class="review__text" data-slot="text"></p>
+    <div class="review__rule"></div>
+    <div class="review__author">
+      <span class="review__avatar" data-slot="initials"></span>
+      <span class="review__who">
+        <span class="review__name" data-slot="name"></span>
+        <span class="review__meta" data-slot="meta"></span>
+      </span>
+    </div>
+  </article>
+</template>
+
 <template id="tpl-corner">
   <div class="corner" id="corner" data-sound="off">
     <button class="corner__btn" type="button" id="btn-about">
@@ -575,10 +632,12 @@
 <script src="js/data/gallery.js"></script>
 <script src="js/data/history.js"></script>
 <script src="js/data/museum.js"></script>
+<script src="js/data/reviews.js"></script>
 <script src="js/screens.js"></script>
 <script src="js/gallery.js"></script>
 <script src="js/history.js"></script>
 <script src="js/museum.js"></script>
+<script src="js/reviews.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

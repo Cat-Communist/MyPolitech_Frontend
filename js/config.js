@@ -86,6 +86,15 @@ window.CONFIG = {
     exhibitPrev: 'Предыдущий',
     exhibitNext: 'Следующий',
 
+    reviewsFull: 'Отзывы выпускников',
+    writeReview: 'Оставить отзыв',
+    allReviews: 'Все отзывы',
+    reviewForms: ['отзыв', 'отзыва', 'отзывов'],
+    newestFirst: 'сначала новые',
+    noReviews: 'Отзывов пока нет — станьте первым.',
+    showMore: 'Показать ещё',
+    reviewPhoto: 'Фото выпуска',
+
     soonTitle: 'Скоро здесь будет…',
     back: 'Назад в меню',
     about: 'Об игре',

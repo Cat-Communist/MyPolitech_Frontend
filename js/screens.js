@@ -43,7 +43,7 @@ window.Screens = (function () {
   }
 
   /* Эти экраны свёрстаны только под альбомную сцену; в портретном окне она просто уменьшается. */
-  var LANDSCAPE_ONLY = ['gallery', 'history', 'museum'];
+  var LANDSCAPE_ONLY = ['gallery', 'history', 'museum', 'reviews'];
 
   /* Кнопки «Об игре» и «Звук» есть только на этих экранах; на остальных угол занят шапкой. */
   var WITH_CORNER = ['menu', 'stub'];

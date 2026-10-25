@@ -1,0 +1,182 @@
+/* Отзывы выпускников: лента в колонках. Сцена всегда альбомная, 1600×900. */
+
+.reviews{position:absolute;inset:0;animation:pp-in .4s ease-out both}
+
+.btn-write{
+  flex:none;
+  height:60px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 26px 0 22px;
+  border:1.5px solid var(--c-blue);
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:700;
+  font-size:19px;
+  color:#fff;
+  background:var(--c-blue);
+  box-shadow:0 8px 20px rgba(10,102,255,.25);
+  transition:transform .16s ease, box-shadow .16s ease, background .16s ease;
+}
+.btn-write:hover{
+  transform:translateY(-2px);
+  background:var(--c-blue-deep);
+  box-shadow:0 0 0 5px var(--c-glow), 0 12px 26px rgba(10,102,255,.3);
+}
+.btn-write:active{transform:translateY(1px)}
+.btn-write__icon{
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* Фильтры. Институтов может быть 10–16, поэтому ряд прокручивается по горизонтали;
+   края ряда растворяются, чтобы было видно, что он продолжается. */
+.filters{
+  position:absolute;
+  left:40px;
+  right:40px;
+  top:118px;
+  height:62px;
+  display:flex;
+  align-items:flex-start;
+  gap:24px;
+}
+.filters__row{
+  flex:1;
+  min-width:0;
+  height:100%;
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  /* Сверху отступ, снизу запас под полосу прокрутки — она не должна подрезать фильтры. */
+  padding-top:4px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:thin;
+  -webkit-mask-image:linear-gradient(90deg, #000 calc(100% - 40px), transparent);
+  mask-image:linear-gradient(90deg, #000 calc(100% - 40px), transparent);
+  padding-right:40px;
+}
+.filters__count{
+  flex:none;
+  align-self:center;
+  margin-top:-8px;
+  font-family:var(--font-mono);
+  font-size:16px;
+  color:var(--c-ink-dim);
+}
+
+.pill{
+  flex:none;
+  height:46px;
+  padding:0 18px;
+  border:1.5px solid var(--c-line);
+  border-radius:23px;
+  cursor:pointer;
+  white-space:nowrap;
+  font-weight:600;
+  font-size:16px;
+  color:var(--c-ink);
+  background:var(--c-surface);
+  transition:all .16s ease;
+}
+.pill:hover{border-color:var(--c-blue)}
+.pill.is-active{border-color:var(--c-blue);color:#fff;background:var(--c-blue)}
+
+/* Лента: колонки газетного типа, карточки не разрываются между колонками. */
+.feed{
+  position:absolute;
+  left:0;
+  right:0;
+  top:192px;
+  bottom:0;
+  overflow-y:auto;
+  padding:4px 40px 40px;
+}
+.feed__cols{column-count:3;column-gap:24px}
+.feed__empty{
+  margin:80px 0 0;
+  text-align:center;
+  font-size:22px;
+  font-weight:600;
+  color:var(--c-ink-dim);
+}
+.feed__more{display:flex;justify-content:center;padding-top:8px}
+.feed__more-btn{
+  height:60px;
+  padding:0 32px;
+  border:1.5px solid var(--c-line);
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:700;
+  font-size:18px;
+  background:var(--c-surface);
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.feed__more-btn:hover{
+  transform:translateY(-2px);
+  border-color:var(--c-blue);
+  box-shadow:0 0 0 4px var(--c-glow);
+}
+.feed__more-btn:active{transform:translateY(1px)}
+.feed__more-btn[hidden]{display:none}
+
+.review{
+  break-inside:avoid;
+  margin:0 0 24px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  padding:28px 28px 24px;
+  border:1.5px solid var(--c-line);
+  border-radius:16px;
+  background:var(--c-surface);
+  box-shadow:0 2px 0 var(--c-line), 0 10px 24px rgba(14,26,43,.05);
+  transition:border-color .18s ease, box-shadow .18s ease;
+}
+.review:hover{border-color:var(--c-blue);box-shadow:0 0 0 5px var(--c-glow)}
+.review__quote{fill:var(--c-blue);opacity:.9}
+
+.review__photo{
+  position:relative;
+  height:200px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  background:var(--c-photo);
+  font-size:16px;
+  font-weight:600;
+  color:var(--c-photo-ink);
+}
+.review__photo[hidden]{display:none}
+.review__photo.is-stub{
+  background-image:repeating-linear-gradient(135deg, rgba(255,255,255,.22) 0 2px, transparent 2px 14px);
+}
+.review__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+
+.review__text{margin:0;font-size:18px;line-height:1.6;font-weight:500;text-wrap:pretty}
+.review__rule{height:1.5px;background:var(--c-line)}
+.review__author{display:flex;align-items:center;gap:14px}
+.review__avatar{
+  width:48px;
+  height:48px;
+  flex:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1.5px solid var(--c-line);
+  border-radius:50%;
+  background:var(--c-bg);
+  font-weight:800;
+  font-size:16px;
+  color:var(--c-blue-deep);
+}
+.review__who{display:flex;flex-direction:column;gap:3px;min-width:0}
+.review__name{font-size:18px;font-weight:700}
+.review__meta{font-size:15px;font-weight:500;color:var(--c-ink-dim)}
