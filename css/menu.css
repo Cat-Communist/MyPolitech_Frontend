@@ -135,16 +135,16 @@
   flex-direction:column;
   align-items:var(--brand-align);
   text-align:var(--brand-align);
-  gap:18px;
-  max-width:660px;
+  gap:30px;
+  width:620px;
 }
-.menu__mark{height:var(--mark-h);width:auto;display:block;margin-bottom:10px}
+.menu__mark{height:var(--mark-h);width:auto;display:block}
 .menu__title{
   margin:0;
   padding-bottom:6px;
   font-weight:800;
   font-size:var(--title-size);
-  line-height:1.05;
+  line-height:1.04;
   letter-spacing:-.015em;
   text-wrap:balance;
   background:var(--g-title);
@@ -154,15 +154,15 @@
 }
 .menu__tagline{margin:0;font-size:24px;font-weight:500;color:var(--c-ink-dim)}
 
-.menu__modes{display:flex;flex-direction:column;gap:26px}
+.menu__modes{display:flex;flex-direction:column;gap:14px}
 
 .mode{
   width:var(--mode-w);
-  height:150px;
+  height:112px;
   display:flex;
   align-items:center;
-  gap:28px;
-  padding:0 36px;
+  gap:26px;
+  padding:0 30px;
   border:1.5px solid var(--c-line);
   border-radius:16px;
   cursor:pointer;
@@ -172,32 +172,32 @@
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 .mode:hover{
-  transform:translateX(-6px);
+  transform:translateX(6px);
   border-color:var(--c-blue);
   box-shadow:0 0 0 5px var(--c-glow), 0 18px 36px rgba(10,102,255,.18);
 }
 .mode:active{
-  transform:translateY(1px);
+  transform:translateX(2px) translateY(1px);
   border-color:var(--c-blue);
   box-shadow:0 0 0 3px var(--c-glow), 0 4px 10px rgba(10,102,255,.14);
 }
 .mode__num{
   flex:none;
   font-family:var(--font-mono);
-  font-size:20px;
+  font-size:19px;
   color:var(--c-ink-dim);
 }
 .mode__icon{
   flex:none;
   fill:none;
   stroke:var(--c-blue);
-  stroke-width:2.5;
+  stroke-width:2.6;
   stroke-linejoin:round;
   stroke-linecap:round;
 }
-.mode__text{display:flex;flex-direction:column;gap:8px;min-width:0;flex:1}
-.mode__title{font-weight:700;font-size:32px;line-height:1.1;white-space:nowrap}
-.mode__desc{font-size:20px;font-weight:500;color:var(--c-ink-dim);white-space:nowrap}
+.mode__text{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.mode__title{font-weight:700;font-size:29px;line-height:1.1;white-space:nowrap}
+.mode__desc{font-size:17px;font-weight:500;color:var(--c-ink-dim);white-space:nowrap}
 .mode__arrow{
   flex:none;
   fill:none;

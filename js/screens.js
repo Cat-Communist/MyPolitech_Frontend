@@ -66,8 +66,7 @@ window.Screens = (function () {
     s.setProperty('--brand-align', portrait ? 'center' : 'flex-start');
     s.setProperty('--mode-w', portrait ? '760px' : '700px');
     s.setProperty('--mark-h', portrait ? '200px' : '150px');
-    s.setProperty('--title-size', portrait ? '84px' : '92px');
-    s.setProperty('--menu-gap', portrait ? '72px' : '120px');
+    s.setProperty('--menu-gap', portrait ? '64px' : '60px');
     s.setProperty('--foot-w', portrait ? '600px' : '340px');
   }
 

@@ -225,7 +225,7 @@ window.Gallery = (function () {
     var photo = y.photos[view.index];
     var v = root.querySelector('#viewer');
 
-    v.querySelector('#viewer-kicker').textContent = T.galleryTitle + ' · ' + T.release + ' ' + y.year;
+    v.querySelector('#viewer-kicker').textContent = T.galleryFull + ' · ' + T.release + ' ' + y.year;
     v.querySelector('#viewer-num').textContent = pad(view.index + 1) + ' / ' + pad(y.photos.length);
     v.querySelector('#viewer-name').textContent = T.photoStub + ' ' + y.year;
     v.querySelector('#viewer-caption').textContent = photo.caption;
