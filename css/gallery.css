@@ -1,0 +1,267 @@
+/* Галерея выпускников. Сцена здесь всегда альбомная, 1600×900, поэтому координаты абсолютные. */
+
+.gallery{position:absolute;inset:0;animation:pp-in .45s ease-out both}
+
+/* Шкала лет */
+
+.tl{
+  position:absolute;
+  left:40px;
+  right:40px;
+  top:126px;
+  height:100px;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  padding:0 20px;
+  border:1.5px solid var(--c-line);
+  border-radius:16px;
+  background:var(--c-surface);
+}
+.tl__track{position:relative;flex:1;height:100%}
+.tl__line{position:absolute;left:12px;right:12px;top:34px;height:2px;background:var(--c-line)}
+.tl__years{position:relative;display:flex;justify-content:space-between;height:100%}
+
+.tl__year{
+  width:96px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  padding:24px 0 0;
+  border:0;
+  background:none;
+  cursor:pointer;
+}
+.tl__dot{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  border:2px solid var(--c-line);
+  background:var(--c-surface);
+  transition:all .25s ease;
+}
+.tl__label{
+  font-family:var(--font-mono);
+  font-size:19px;
+  line-height:1;
+  color:var(--c-ink-dim);
+  transition:all .25s ease;
+}
+.tl__year:hover .tl__dot{border-color:var(--c-blue)}
+.tl__year:hover .tl__label{color:var(--c-ink)}
+.tl__year.is-active .tl__dot{
+  border-color:var(--c-blue);
+  background:var(--c-blue);
+  box-shadow:0 0 0 6px var(--c-glow);
+}
+.tl__year.is-active .tl__label{font-size:26px;font-weight:700;color:var(--c-blue)}
+
+/* Альбом */
+
+.album{
+  position:absolute;
+  left:200px;
+  top:250px;
+  width:1200px;
+  height:556px;
+  perspective:2600px;
+}
+
+/* Три листа со сдвигом — толщина альбома. */
+.album__sheet{
+  position:absolute;
+  inset:0;
+  border-radius:14px;
+  border:1.5px solid var(--c-line);
+  background:var(--c-surface);
+}
+.album__sheet--3{left:6px;right:6px;top:8px;bottom:-8px}
+.album__sheet--2{left:2px;right:2px;top:4px;bottom:-4px}
+.album__sheet--1{box-shadow:0 18px 40px rgba(14,26,43,.10)}
+
+.album__half{position:absolute;top:1.5px;bottom:1.5px;overflow:hidden}
+.album__half--l{left:1.5px;width:calc(50% - 1.5px);border-radius:13px 0 0 13px}
+.album__half--r{left:50%;right:1.5px;border-radius:0 13px 13px 0}
+
+.album__spine{
+  position:absolute;
+  left:50%;
+  top:0;
+  bottom:0;
+  width:1.5px;
+  margin-left:-.75px;
+  background:var(--c-line);
+}
+
+/* Тень на открывающейся странице: пока лист её закрывает, она темнее. */
+.album__under{
+  position:absolute;
+  top:1.5px;
+  bottom:1.5px;
+  left:50%;
+  width:calc(50% - 1.5px);
+  background:linear-gradient(90deg, rgba(14,26,43,.22), rgba(14,26,43,.04));
+  opacity:0;
+  pointer-events:none;
+}
+.album.is-back .album__under{left:1.5px}
+.album.is-turning .album__under{opacity:1}
+.album.is-flipping .album__under{opacity:0;transition:opacity .82s ease-in}
+
+/* Переворачиваемый лист: при движении вперёд лежит справа и крутится вокруг корешка влево. */
+.album__leaf{
+  position:absolute;
+  top:1.5px;
+  bottom:1.5px;
+  left:50%;
+  width:calc(50% - 1.5px);
+  z-index:2;
+  transform-origin:left center;
+  transform-style:preserve-3d;
+  visibility:hidden;
+  pointer-events:none;
+}
+.album.is-back .album__leaf{left:1.5px;transform-origin:right center}
+.album.is-turning .album__leaf{visibility:visible}
+.album.is-flipping .album__leaf{
+  transform:rotateY(-180deg);
+  transition:transform .8s cubic-bezier(.45,.05,.25,1);
+}
+.album.is-flipping.is-back .album__leaf{transform:rotateY(180deg)}
+
+.album__face{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  box-shadow:0 0 28px rgba(14,26,43,.16);
+  border-radius:0 13px 13px 0;
+}
+.album__face--back{transform:rotateY(180deg);border-radius:13px 0 0 13px}
+.album.is-back .album__face{border-radius:13px 0 0 13px}
+.album.is-back .album__face--back{border-radius:0 13px 13px 0}
+
+/* Загнутые уголки страниц — тоже кнопки перелистывания. */
+.album__corner{
+  position:absolute;
+  bottom:1.5px;
+  width:58px;
+  height:58px;
+  padding:0;
+  border:0;
+  z-index:3;
+  cursor:pointer;
+  transition:width .18s ease, height .18s ease;
+}
+.album__corner:hover{width:76px;height:76px}
+.album__corner:disabled{opacity:.35;cursor:default;width:58px;height:58px}
+.album__corner--l{
+  left:1.5px;
+  border-radius:0 0 0 13px;
+  background:linear-gradient(45deg, var(--c-bg) 50%, transparent 50%);
+}
+.album__corner--r{
+  right:1.5px;
+  border-radius:0 0 13px 0;
+  background:linear-gradient(-45deg, var(--c-bg) 50%, transparent 50%);
+}
+
+.album__nav{position:absolute;top:496px}
+.album__nav--prev{left:104px}
+.album__nav--next{left:1432px}
+
+.album-foot{
+  position:absolute;
+  left:200px;
+  right:200px;
+  top:832px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:22px;
+}
+.album-foot__year{font-size:18px;font-weight:700}
+.album-foot__dots{display:flex;gap:8px;align-items:center}
+.album-foot__dot{
+  width:8px;
+  height:8px;
+  border-radius:4px;
+  background:var(--c-line);
+  transition:all .25s ease;
+}
+.album-foot__dot.is-active{width:28px;background:var(--c-blue)}
+.album-foot__spread{font-size:17px;font-weight:500;color:var(--c-ink-dim)}
+.album-foot__no{font-family:var(--font-mono);font-size:16px;color:var(--c-blue)}
+
+/* Страница альбома */
+
+.page{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  padding:30px 34px;
+  background:var(--c-surface);
+}
+/* Лёгкая тень у корешка. */
+.page::after{content:'';position:absolute;inset:0;pointer-events:none}
+.page--l::after{background:linear-gradient(90deg, transparent 86%, rgba(14,26,43,.07))}
+.page--r::after{background:linear-gradient(90deg, rgba(14,26,43,.09), transparent 14%)}
+
+.page__top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--c-teal);
+}
+.page__num{font-family:var(--font-mono);letter-spacing:0;color:var(--c-ink-dim)}
+.page__year{font-family:var(--font-mono);font-size:88px;line-height:1;color:var(--c-blue-deep)}
+.page__meta{font-size:17px;font-weight:600;color:var(--c-ink-dim)}
+.page__caption{font-size:16px;font-weight:500;color:var(--c-ink-dim)}
+.page__row{flex:1;min-height:0;display:flex;gap:14px}
+
+.page--end{
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  font-weight:600;
+  color:var(--c-ink-dim);
+}
+
+/* Фото: снимок или серая заглушка с подписью. */
+.photo{
+  position:relative;
+  min-height:0;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  border:2px solid transparent;
+  border-radius:8px;
+  cursor:pointer;
+  background:var(--c-photo);
+  font-weight:600;
+  font-size:18px;
+  color:var(--c-photo-ink);
+  transition:border-color .16s ease, box-shadow .16s ease;
+}
+.photo:hover{border-color:var(--c-blue);box-shadow:0 0 0 4px var(--c-glow)}
+.photo--fill{flex:1}
+.photo--big{flex:none;height:270px}
+.photo--small{flex:1;font-size:15px}
+.photo--fill.photo--stub,
+.photo--big.photo--stub{
+  background-image:repeating-linear-gradient(135deg, rgba(255,255,255,.22) 0 2px, transparent 2px 14px);
+}
+.photo__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+/* Пустые места на неполной странице сохраняют раскладку. */
+.photo[hidden]{visibility:hidden}

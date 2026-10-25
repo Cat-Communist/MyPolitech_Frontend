@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="css/variables.css">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/menu.css">
+<link rel="stylesheet" href="css/gallery.css">
 </head>
 <body>
 
@@ -121,6 +122,102 @@
   </div>
 </template>
 
+<template id="tpl-gallery">
+  <div class="gallery">
+    <div class="head">
+      <button class="chip" type="button" data-go="menu">
+        <svg class="chip__icon" width="22" height="22" viewBox="0 0 28 28" aria-hidden="true">
+          <path d="M23 14 H6 M13 7 L6 14 L13 21"></path>
+        </svg>
+        <span data-text="back"></span>
+      </button>
+      <div class="head__titles">
+        <span class="head__kicker" data-text="galleryTitle"></span>
+        <span class="head__title" data-text="albumTitle"></span>
+      </div>
+      <img class="head__mark" data-img="mark" data-alt="markAlt" alt="">
+    </div>
+
+    <div class="tl">
+      <button class="round" type="button" id="tl-prev" data-alt-text="yearsPrev">
+        <svg class="round__icon" width="20" height="20" viewBox="0 0 28 28" aria-hidden="true"><path d="M17 6 L9 14 L17 22"></path></svg>
+      </button>
+      <div class="tl__track">
+        <div class="tl__line"></div>
+        <div class="tl__years" id="tl-years"></div>
+      </div>
+      <button class="round" type="button" id="tl-next" data-alt-text="yearsNext">
+        <svg class="round__icon" width="20" height="20" viewBox="0 0 28 28" aria-hidden="true"><path d="M11 6 L19 14 L11 22"></path></svg>
+      </button>
+    </div>
+
+    <div class="album" id="album">
+      <div class="album__sheet album__sheet--3"></div>
+      <div class="album__sheet album__sheet--2"></div>
+      <div class="album__sheet album__sheet--1"></div>
+      <div class="album__half album__half--l" id="page-l"></div>
+      <div class="album__half album__half--r" id="page-r"></div>
+      <div class="album__under" id="album-under"></div>
+      <div class="album__spine"></div>
+      <div class="album__leaf" id="album-leaf">
+        <div class="album__face" id="leaf-front"></div>
+        <div class="album__face album__face--back" id="leaf-back"></div>
+      </div>
+      <button class="album__corner album__corner--l" type="button" id="corner-prev" data-alt-text="spreadPrev"></button>
+      <button class="album__corner album__corner--r" type="button" id="corner-next" data-alt-text="spreadNext"></button>
+    </div>
+
+    <button class="round round--lg album__nav album__nav--prev" type="button" id="album-prev" data-alt-text="spreadPrev">
+      <svg class="round__icon" width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><path d="M17 6 L9 14 L17 22"></path></svg>
+    </button>
+    <button class="round round--lg round--primary album__nav album__nav--next" type="button" id="album-next" data-alt-text="spreadNext">
+      <svg class="round__icon" width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><path d="M11 6 L19 14 L11 22"></path></svg>
+    </button>
+
+    <div class="album-foot">
+      <span class="album-foot__year" id="foot-year"></span>
+      <div class="album-foot__dots" id="foot-dots"></div>
+      <span class="album-foot__spread" id="foot-spread"></span>
+      <span class="album-foot__no" id="foot-no"></span>
+    </div>
+  </div>
+</template>
+
+<!-- Страницы альбома: gallery.js клонирует их и заполняет из js/data/gallery.js. -->
+<template id="tpl-page-title">
+  <div class="page">
+    <div class="page__top">
+      <span data-text="release"></span>
+      <span class="page__num" data-slot="num"></span>
+    </div>
+    <span class="page__year" data-slot="year"></span>
+    <span class="page__meta" data-slot="meta"></span>
+    <button class="photo photo--fill" type="button" data-slot="photo0"></button>
+    <span class="page__caption" data-slot="caption"></span>
+  </div>
+</template>
+
+<template id="tpl-page-photos">
+  <div class="page">
+    <div class="page__top">
+      <span data-slot="release"></span>
+      <span class="page__num" data-slot="num"></span>
+    </div>
+    <button class="photo photo--big" type="button" data-slot="photo0"></button>
+    <span class="page__caption" data-slot="caption"></span>
+    <div class="page__row">
+      <button class="photo photo--small" type="button" data-slot="photo1"></button>
+      <button class="photo photo--small" type="button" data-slot="photo2"></button>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-page-end">
+  <div class="page page--end">
+    <span data-text="albumEnd"></span>
+  </div>
+</template>
+
 <template id="tpl-corner">
   <div class="corner" id="corner" data-sound="off">
     <button class="corner__btn" type="button" id="btn-about">
@@ -156,7 +253,9 @@
 </template>
 
 <script src="js/config.js"></script>
+<script src="js/data/gallery.js"></script>
 <script src="js/screens.js"></script>
+<script src="js/gallery.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

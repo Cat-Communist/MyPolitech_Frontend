@@ -39,9 +39,20 @@
     show('menu');
   }
 
+  /* Разделы, у которых уже есть свой экран; остальные пока ведут на заглушку «Скоро». */
+  var SECTIONS = {
+    gallery: function () {
+      show('gallery');
+      window.Gallery.init(document.querySelector('.gallery'), {
+        flip: function () { blip(520, 0.12, 'triangle', 0.04); },
+      });
+    },
+  };
+
   function openMode(mode) {
     blip(880, 0.1);
-    show('stub', mode);
+    if (SECTIONS[mode]) SECTIONS[mode]();
+    else show('stub', mode);
   }
 
   function toggleSound() {
@@ -72,7 +83,7 @@
     var mode = el.closest('.mode');
     if (mode) { openMode(mode.dataset.mode); return; }
 
-    if (el.closest('#btn-back')) { goMenu(); return; }
+    if (el.closest('#btn-back, [data-go="menu"]')) { goMenu(); return; }
     if (el.closest('#btn-about')) { openAbout(); return; }
     if (el.closest('#btn-sound')) { toggleSound(); return; }
     if (el.closest('#btn-about-ok')) { closeAbout(); return; }
@@ -83,7 +94,7 @@
   });
 
   /* mouseover, в отличие от mouseenter, всплывает; отсеиваем перемещения внутри кнопки. */
-  var HOVER_SELECTOR = '.mode, #btn-back, #btn-about, #btn-about-ok';
+  var HOVER_SELECTOR = '.mode, #btn-back, #btn-about, #btn-about-ok, .chip, .round';
   document.addEventListener('mouseover', function (e) {
     var el = e.target.closest(HOVER_SELECTOR);
     if (!el) return;
@@ -102,9 +113,12 @@
   });
 
   window.addEventListener('keydown', function (e) {
+    var screen = S.currentScreen();
+    if (screen === 'gallery') window.Gallery.key(e);
+
     if (e.key !== 'Escape') return;
     if (S.isAboutOpen()) closeAbout();
-    else if (S.currentScreen() === 'stub') goMenu();
+    else if (screen !== 'menu' && screen !== 'loading') goMenu();
   });
 
   function preload() {

@@ -18,12 +18,30 @@ window.Screens = (function () {
       el.src = IMG[el.dataset.img];
       el.alt = T[el.dataset.alt];
     });
+
+    /* Подсказка для кнопок без текста: её читает скринридер и показывает браузер при наведении. */
+    root.querySelectorAll('[data-alt-text]').forEach(function (el) {
+      el.title = T[el.dataset.altText];
+      el.setAttribute('aria-label', T[el.dataset.altText]);
+    });
   }
+
+  function clone(tplId) {
+    var frag = document.getElementById(tplId).content.cloneNode(true);
+    fill(frag);
+    return frag;
+  }
+
+  /* Эти экраны свёрстаны только под альбомную сцену; в портретном окне она просто уменьшается. */
+  var LANDSCAPE_ONLY = ['gallery'];
+
+  /* Кнопки «Об игре» и «Звук» есть только на этих экранах; на остальных угол занят шапкой. */
+  var WITH_CORNER = ['menu', 'stub'];
 
   function applyLayout() {
     var vw = window.innerWidth;
     var vh = window.innerHeight;
-    var portrait = vw / vh < 0.85;
+    var portrait = vw / vh < 0.85 && LANDSCAPE_ONLY.indexOf(current) < 0;
 
     var W = portrait ? 900 : 1600;
     var H = portrait ? 1600 : 900;
@@ -152,14 +170,13 @@ window.Screens = (function () {
     var slot = document.getElementById(slotId);
     slot.replaceChildren();
     if (!tplId) return;
-    var frag = document.getElementById(tplId).content.cloneNode(true);
-    fill(frag);
-    slot.appendChild(frag);
+    slot.appendChild(clone(tplId));
   }
 
   /* Экран каждый раз монтируется заново, поэтому анимация появления проигрывается при каждом входе. */
   function show(name, mode) {
     current = name;
+    applyLayout();
     mount('screen-slot', 'tpl-' + name);
 
     if (name === 'stub') {
@@ -168,10 +185,8 @@ window.Screens = (function () {
       document.getElementById('stub-text').textContent = 'Здесь будет ' + T[mode + 'Soon'];
     }
 
-    /* Кнопки в углу появляются после загрузки и дальше висят постоянно. */
-    if (name !== 'loading' && !document.getElementById('corner')) {
-      mount('corner-slot', 'tpl-corner');
-    }
+    if (WITH_CORNER.indexOf(name) < 0) mount('corner-slot', null);
+    else if (!document.getElementById('corner')) mount('corner-slot', 'tpl-corner');
   }
 
   function setProgress(value) {
@@ -198,6 +213,7 @@ window.Screens = (function () {
     buildBackground: buildBackground,
     parallax: parallax,
     show: show,
+    clone: clone,
     currentScreen: function () { return current; },
     setProgress: setProgress,
     setSound: setSound,

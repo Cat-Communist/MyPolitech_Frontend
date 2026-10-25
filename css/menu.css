@@ -400,3 +400,96 @@
   box-shadow:0 0 0 5px var(--c-glow);
 }
 .about__ok:active{transform:translateY(1px)}
+
+
+/* Общие детали разделов: шапка с кнопкой «Назад в меню», кнопки-плашки и круглые кнопки. */
+
+.head{
+  position:absolute;
+  left:40px;
+  right:40px;
+  top:30px;
+  display:flex;
+  align-items:center;
+  gap:28px;
+  z-index:4;
+}
+.head__titles{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.head__kicker{
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--c-teal);
+}
+.head__title{font-size:32px;font-weight:800;line-height:1.15}
+.head__mark{height:60px;width:auto;display:block}
+
+.chip{
+  flex:none;
+  height:56px;
+  padding:0 22px 0 16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border:1.5px solid var(--c-line);
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:18px;
+  background:var(--c-surface);
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.chip:hover{
+  transform:translateY(-2px);
+  border-color:var(--c-blue);
+  box-shadow:0 0 0 4px var(--c-glow);
+}
+.chip:active{transform:translateY(1px)}
+.chip__icon{
+  fill:none;
+  stroke:var(--c-blue);
+  stroke-width:2.6;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.round{
+  flex:none;
+  width:48px;
+  height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  border:1.5px solid var(--c-line);
+  border-radius:50%;
+  cursor:pointer;
+  background:var(--c-surface);
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+}
+.round:hover{border-color:var(--c-blue);box-shadow:0 0 0 4px var(--c-glow)}
+.round:disabled{opacity:.35;cursor:default;border-color:var(--c-line);box-shadow:none;transform:none}
+.round__icon{
+  fill:none;
+  stroke:var(--c-blue);
+  stroke-width:2.6;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.round--lg{width:64px;height:64px}
+.round--lg:hover{transform:scale(1.06);box-shadow:0 0 0 5px var(--c-glow)}
+.round--lg:active{transform:scale(.96)}
+
+.round--primary{
+  border-color:var(--c-blue);
+  background:var(--c-blue);
+  box-shadow:0 8px 20px rgba(10,102,255,.25);
+}
+.round--primary .round__icon{stroke:#fff}
+.round--primary:hover{
+  background:var(--c-blue-deep);
+  box-shadow:0 0 0 5px var(--c-glow), 0 12px 26px rgba(10,102,255,.3);
+}
+.round--primary:disabled{border-color:var(--c-blue);background:var(--c-blue)}

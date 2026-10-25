@@ -12,6 +12,8 @@
   --c-grid:rgba(11,71,168,.07);
   --c-circuit:rgba(11,71,168,.14);
   --c-code:rgba(11,71,168,.085);
+  --c-photo:#D5DBE3;
+  --c-photo-ink:#66748A;
   --g-title:linear-gradient(90deg, var(--c-teal), var(--c-blue-deep));
 
   --font-ui:'Montserrat', system-ui, sans-serif;
