@@ -265,3 +265,133 @@
 .photo__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 /* Пустые места на неполной странице сохраняют раскладку. */
 .photo[hidden]{visibility:hidden}
+
+/* Просмотр одного фото. Лежит поверх альбома; альбом прячется, фон сцены остаётся. */
+
+.gallery.is-viewing > :not(.viewer){visibility:hidden}
+
+.viewer{position:absolute;inset:0;z-index:10;animation:pp-in .25s ease-out both}
+.viewer .head{gap:16px}
+.viewer__titles{padding-left:12px}
+
+.viewer__frame{
+  position:absolute;
+  left:40px;
+  top:130px;
+  width:1130px;
+  height:600px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1.5px solid var(--c-line);
+  border-radius:16px;
+  background:var(--c-photo);
+  font-size:26px;
+  font-weight:600;
+  color:var(--c-photo-ink);
+}
+.viewer__frame.photo--stub{
+  background-image:repeating-linear-gradient(135deg, rgba(255,255,255,.22) 0 2px, transparent 2px 16px);
+}
+/* Снимок целиком, без обрезки: здесь важнее увидеть всех на фото. */
+.viewer__frame .photo__img{object-fit:contain}
+
+.viewer__nav{position:absolute;top:398px}
+.viewer__nav--prev{left:64px}
+.viewer__nav--next{left:1082px}
+
+.viewer__info{
+  position:absolute;
+  left:1196px;
+  right:40px;
+  top:130px;
+  height:600px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  padding:30px 28px;
+  border:1.5px solid var(--c-line);
+  border-radius:16px;
+  background:var(--c-surface);
+}
+.viewer__num{font-family:var(--font-mono);font-size:20px;color:var(--c-blue)}
+.viewer__name{font-size:30px;font-weight:800;line-height:1.15}
+.viewer__caption{
+  margin:0;
+  font-size:19px;
+  line-height:1.55;
+  font-weight:500;
+  color:var(--c-ink-dim);
+  text-wrap:pretty;
+  overflow:auto;
+}
+.viewer__rule{flex:none;height:1.5px;background:var(--c-line)}
+.viewer__field{display:flex;flex-direction:column;gap:6px}
+.viewer__label{
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--c-teal);
+}
+.viewer__value{font-size:18px;font-weight:600}
+.viewer__spacer{flex:1}
+
+.viewer__all{
+  flex:none;
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  border:1.5px solid var(--c-line);
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:700;
+  font-size:18px;
+  background:var(--c-surface);
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.viewer__all:hover{
+  transform:translateY(-2px);
+  border-color:var(--c-blue);
+  box-shadow:0 0 0 4px var(--c-glow);
+}
+.viewer__all:active{transform:translateY(1px)}
+.viewer__all-icon{fill:none;stroke:var(--c-blue);stroke-width:2.2}
+
+/* Миниатюры делят ширину поровну; если фото много, ряд прокручивается. */
+.viewer__thumbs{
+  position:absolute;
+  left:34px;
+  right:34px;
+  top:750px;
+  height:120px;
+  display:flex;
+  gap:14px;
+  /* Поля, чтобы подсветка и подъём миниатюры при наведении не обрезались прокруткой. */
+  padding:6px 6px 10px;
+  overflow-x:auto;
+  overflow-y:hidden;
+}
+.thumb{
+  position:relative;
+  flex:1 0 110px;
+  height:104px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  border:2.5px solid transparent;
+  border-radius:10px;
+  cursor:pointer;
+  background:var(--c-photo);
+  font-size:13px;
+  font-weight:600;
+  color:var(--c-photo-ink);
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.thumb:hover{transform:translateY(-3px)}
+.thumb.is-active{border-color:var(--c-blue);box-shadow:0 0 0 4px var(--c-glow)}

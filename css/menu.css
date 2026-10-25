@@ -446,6 +446,7 @@
   box-shadow:0 0 0 4px var(--c-glow);
 }
 .chip:active{transform:translateY(1px)}
+.chip--plain{padding:0 22px}
 .chip__icon{
   fill:none;
   stroke:var(--c-blue);

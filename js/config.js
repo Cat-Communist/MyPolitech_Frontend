@@ -40,6 +40,13 @@ window.CONFIG = {
     spreadPrev: 'Предыдущий разворот',
     spreadNext: 'Следующий разворот',
 
+    viewerTitle: 'Просмотр фотографии',
+    toAlbum: 'К альбому',
+    allPhotos: 'Все фото выпуска',
+    institute: 'Институт',
+    photoPrev: 'Предыдущее фото',
+    photoNext: 'Следующее фото',
+
     soonTitle: 'Скоро здесь будет…',
     back: 'Назад в меню',
     about: 'Об игре',

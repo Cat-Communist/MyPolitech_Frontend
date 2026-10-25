@@ -1,4 +1,5 @@
-/* Галерея выпускников: шкала лет и альбом с перелистыванием. Данные — js/data/gallery.js. */
+/* Галерея выпускников: шкала лет, альбом с перелистыванием и просмотр одного фото.
+   Данные — js/data/gallery.js. */
 
 window.Gallery = (function () {
   'use strict';
@@ -18,6 +19,7 @@ window.Gallery = (function () {
   var dir = 0;          /* направление идущего перелистывания, 0 — не листаем */
   var win = 0;          /* первый год, видимый на шкале */
   var timer = null;
+  var view = null;      /* открытое фото: { yi, index }, null — просмотр закрыт */
 
   function pad(n) { return String(n).padStart(2, '0'); }
 
@@ -56,22 +58,28 @@ window.Gallery = (function () {
     else if (yi >= win + WIN) win = yi - WIN + 1;
   }
 
-  function fillPhoto(btn, y, index) {
-    var photo = y.photos[index];
-    if (!photo) { btn.hidden = true; return; }
-
-    btn.dataset.year = y.year;
-    btn.dataset.index = index;
+  /* Снимок, а если путь пустой — серая заглушка с подписью label. */
+  function putPhoto(el, photo, label) {
     if (photo.src) {
       var img = document.createElement('img');
       img.className = 'photo__img';
       img.src = photo.src;
       img.alt = photo.caption;
-      btn.appendChild(img);
+      el.replaceChildren(img);
     } else {
-      btn.classList.add('photo--stub');
-      btn.textContent = T.photoStub + ' ' + y.year;
+      el.classList.add('photo--stub');
+      el.textContent = label;
     }
+  }
+
+  function fillPhoto(btn, yi, index) {
+    var y = years[yi];
+    var photo = y.photos[index];
+    if (!photo) { btn.hidden = true; return; }
+
+    btn.dataset.yi = yi;
+    btn.dataset.index = index;
+    putPhoto(btn, photo, T.photoStub + ' ' + y.year);
   }
 
   function makePage(idx, side) {
@@ -91,7 +99,7 @@ window.Gallery = (function () {
       slot('year').textContent = y.year;
       slot('meta').textContent = sp.n + ' ' + plural(sp.n, T.spreadForms) + ' · ' +
         count + ' ' + plural(count, T.photoForms);
-      fillPhoto(slot('photo0'), y, 0);
+      fillPhoto(slot('photo0'), sp.y, 0);
       slot('caption').textContent = y.photos[0] ? y.photos[0].caption : '';
     } else {
       /* Нечётное число страниц: последняя правая страница года остаётся пустой, с одной шапкой. */
@@ -99,7 +107,7 @@ window.Gallery = (function () {
       frag = Screens.clone('tpl-page-photos');
       slot('release').textContent = T.release + ' ' + y.year;
       slot('num').textContent = T.pageShort + ' ' + pad(pn + 1) + ' / ' + pad(sp.n * 2);
-      for (var i = 0; i < PER_PAGE; i++) fillPhoto(slot('photo' + i), y, start + i);
+      for (var i = 0; i < PER_PAGE; i++) fillPhoto(slot('photo' + i), sp.y, start + i);
       slot('caption').textContent = y.photos[start] ? y.photos[start].caption : '';
     }
 
@@ -219,8 +227,79 @@ window.Gallery = (function () {
     renderTimeline();
   }
 
+  /* Просмотр одного фото */
+
+  function renderView() {
+    var y = years[view.yi];
+    var photo = y.photos[view.index];
+    var v = root.querySelector('#viewer');
+
+    v.querySelector('#viewer-kicker').textContent = T.galleryTitle + ' · ' + T.release + ' ' + y.year;
+    v.querySelector('#viewer-num').textContent = pad(view.index + 1) + ' / ' + pad(y.photos.length);
+    v.querySelector('#viewer-name').textContent = T.photoStub + ' ' + y.year;
+    v.querySelector('#viewer-caption').textContent = photo.caption;
+    v.querySelector('#viewer-institute').textContent = photo.institute;
+
+    var frame = v.querySelector('#viewer-frame');
+    frame.className = 'viewer__frame';
+    putPhoto(frame, photo, T.photoStub + ' ' + y.year);
+
+    var thumbs = v.querySelector('#viewer-thumbs');
+    thumbs.replaceChildren();
+    y.photos.forEach(function (p, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'thumb' + (i === view.index ? ' is-active' : '');
+      b.dataset.index = i;
+      b.setAttribute('aria-label', p.caption);
+      putPhoto(b, p, y.year);
+      thumbs.appendChild(b);
+    });
+    var active = thumbs.querySelector('.is-active');
+    if (active) active.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+
+  function openView(yi, index) {
+    view = { yi: yi, index: index };
+    root.appendChild(Screens.clone('tpl-viewer'));
+    root.classList.add('is-viewing');
+    renderView();
+    if (hooks.open) hooks.open();
+  }
+
+  function closeView() {
+    view = null;
+    root.querySelector('#viewer').remove();
+    root.classList.remove('is-viewing');
+    if (hooks.close) hooks.close();
+  }
+
+  /* Внутри года фото листаются по кругу. */
+  function step(d) {
+    var n = years[view.yi].photos.length;
+    view.index = (view.index + d + n) % n;
+    renderView();
+    if (hooks.step) hooks.step();
+  }
+
+  function onViewerClick(el) {
+    if (el.closest('#viewer-close, #viewer-all')) { closeView(); return; }
+    if (el.closest('#viewer-prev')) { step(-1); return; }
+    if (el.closest('#viewer-next')) { step(1); return; }
+    var thumb = el.closest('.thumb');
+    if (thumb) {
+      view.index = Number(thumb.dataset.index);
+      renderView();
+    }
+  }
+
   function onClick(e) {
     var el = e.target;
+    if (view) { onViewerClick(el); return; }
+
+    var photo = el.closest('.photo');
+    if (photo) { openView(Number(photo.dataset.yi), Number(photo.dataset.index)); return; }
+
     var year = el.closest('.tl__year');
     if (year) { selectYear(Number(year.dataset.yi)); return; }
     if (el.closest('#tl-prev')) { shiftWindow(-1); return; }
@@ -237,13 +316,21 @@ window.Gallery = (function () {
     cur = 0;
     dir = 0;
     win = 0;
+    view = null;
     root.addEventListener('click', onClick);
     renderSpread();
   }
 
+  /* Возвращает true, если клавиша обработана здесь. Escape при открытом фото ведёт к альбому, а не в меню. */
   function key(e) {
-    if (e.key === 'ArrowLeft') flip(-1);
-    else if (e.key === 'ArrowRight') flip(1);
+    var d = e.key === 'ArrowLeft' ? -1 : e.key === 'ArrowRight' ? 1 : 0;
+    if (view) {
+      if (e.key === 'Escape') { closeView(); return true; }
+      if (d) { step(d); return true; }
+      return false;
+    }
+    if (d) { flip(d); return true; }
+    return false;
   }
 
   return { init: init, key: key };

@@ -45,6 +45,9 @@
       show('gallery');
       window.Gallery.init(document.querySelector('.gallery'), {
         flip: function () { blip(520, 0.12, 'triangle', 0.04); },
+        open: function () { blip(880, 0.08); },
+        close: function () { blip(440); },
+        step: function () { blip(660, 0.05); },
       });
     },
   };
@@ -94,7 +97,7 @@
   });
 
   /* mouseover, в отличие от mouseenter, всплывает; отсеиваем перемещения внутри кнопки. */
-  var HOVER_SELECTOR = '.mode, #btn-back, #btn-about, #btn-about-ok, .chip, .round';
+  var HOVER_SELECTOR = '.mode, #btn-back, #btn-about, #btn-about-ok, .chip, .round, .viewer__all';
   document.addEventListener('mouseover', function (e) {
     var el = e.target.closest(HOVER_SELECTOR);
     if (!el) return;
@@ -114,7 +117,7 @@
 
   window.addEventListener('keydown', function (e) {
     var screen = S.currentScreen();
-    if (screen === 'gallery') window.Gallery.key(e);
+    if (screen === 'gallery' && window.Gallery.key(e)) return;
 
     if (e.key !== 'Escape') return;
     if (S.isAboutOpen()) closeAbout();

@@ -218,6 +218,60 @@
   </div>
 </template>
 
+<!-- Просмотр одного фото: открывается поверх альбома, альбом под ним не сбрасывается. -->
+<template id="tpl-viewer">
+  <div class="viewer" id="viewer">
+    <div class="head">
+      <button class="chip" type="button" data-go="menu">
+        <svg class="chip__icon" width="22" height="22" viewBox="0 0 28 28" aria-hidden="true">
+          <path d="M23 14 H6 M13 7 L6 14 L13 21"></path>
+        </svg>
+        <span data-text="back"></span>
+      </button>
+      <button class="chip chip--plain" type="button" id="viewer-close">
+        <span data-text="toAlbum"></span>
+      </button>
+      <div class="head__titles viewer__titles">
+        <span class="head__kicker" id="viewer-kicker"></span>
+        <span class="head__title" data-text="viewerTitle"></span>
+      </div>
+      <img class="head__mark" data-img="mark" data-alt="markAlt" alt="">
+    </div>
+
+    <div class="viewer__frame" id="viewer-frame"></div>
+
+    <button class="round round--lg viewer__nav viewer__nav--prev" type="button" id="viewer-prev" data-alt-text="photoPrev">
+      <svg class="round__icon" width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><path d="M17 6 L9 14 L17 22"></path></svg>
+    </button>
+    <button class="round round--lg viewer__nav viewer__nav--next" type="button" id="viewer-next" data-alt-text="photoNext">
+      <svg class="round__icon" width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><path d="M11 6 L19 14 L11 22"></path></svg>
+    </button>
+
+    <div class="viewer__info">
+      <span class="viewer__num" id="viewer-num"></span>
+      <span class="viewer__name" id="viewer-name"></span>
+      <p class="viewer__caption" id="viewer-caption"></p>
+      <div class="viewer__rule"></div>
+      <div class="viewer__field">
+        <span class="viewer__label" data-text="institute"></span>
+        <span class="viewer__value" id="viewer-institute"></span>
+      </div>
+      <div class="viewer__spacer"></div>
+      <button class="viewer__all" type="button" id="viewer-all">
+        <svg class="viewer__all-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+          <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+        </svg>
+        <span data-text="allPhotos"></span>
+      </button>
+    </div>
+
+    <div class="viewer__thumbs" id="viewer-thumbs"></div>
+  </div>
+</template>
+
 <template id="tpl-corner">
   <div class="corner" id="corner" data-sound="off">
     <button class="corner__btn" type="button" id="btn-about">
